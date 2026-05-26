@@ -31,12 +31,21 @@ actualUnits`. Custom work units (`barks`, `pixel-seconds`, …) work with no tru
   **Worker meters, gateway ledgers;** usage ticks are idempotent so retries never
   double-charge.
 
+### Who mints, in practice
+
+In the [Payment Clearinghouse](payment-clearinghouse.md) model, the customer does **not**
+run a sender. The clearinghouse calls `payment-daemon.CreatePayment` with a single
+operator-owned **pooled wallet** and hands the signed envelope to the customer's SDK
+(handoff mode); the customer is charged **expected value at issuance** against a wei
+credit balance and trued up on settle. So `payment-daemon` (this module) is the shared
+ticket engine; the clearinghouse is the credit/accounting layer in front of it.
+
 ## Role in the suite
 
-- **Sent by:** [Gateways](gateways.md) / [Pools](pools.md).
+- **Sent by:** the [Payment Clearinghouse](payment-clearinghouse.md) (pooled wallet) on
+  behalf of customers; conceptually the [Gateways](gateways.md) / [Pools](pools.md) role.
 - **Received by:** [Orchestrators](orchestrators.md) (broker reports usage to the receiver).
-- **Settled/distributed by:** the [Payment Clearinghouse](payment-clearinghouse.md)
-  function (on-chain `TicketBroker` + pool payouts).
+- **Settled/distributed by:** on-chain `TicketBroker` + supply-side `pool-payout-executor`.
 
 ## Confirmed / open
 

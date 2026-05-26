@@ -1,43 +1,66 @@
 # Payment Clearinghouse
 
-**Status:** 🟠 Partial via [livepeer-network-modules](../repos/livepeer-network-modules.md) (`95c6415`)
-**Submodule:** `modules/livepeer-network-modules/` (`payment-daemon` receiver, `pool-payout-executor`)
+**Status:** 🟠 Documented via [livepeer-open-clearinghouse](../repos/livepeer-open-clearinghouse.md) (`a529592`)
+**Submodule:** `modules/livepeer-open-clearinghouse/`
 
-> Open question (Payment vs Clearinghouse boundary) is **partially resolved**. There is no
-> standalone "clearinghouse" service in the first repo; the clearing/settlement function
-> is split across components below. A dedicated clearinghouse repo + SDKs may still be
-> onboarded later — confirm and update.
+> Open question resolved: there **is** a dedicated clearinghouse repo (this one), and it
+> ships reference SDKs. The earlier "partial clearinghouse in network-modules" framing is
+> superseded — see the boundary below.
 
-## What this is — current understanding
+## What this is
 
-Where [Payment](payment.md) is the per-unit instrument exchanged during work, the
-**clearinghouse function** is the settlement, redemption, and distribution of that value.
-In `livepeer-network-modules` this is realized by:
+A **non-custodial-by-design payment clearinghouse** for Livepeer app developers. It
+authenticates developers, holds their **wei-denominated credit balance**, and mints
+signed Livepeer payment tickets **on their behalf** through a single operator-owned
+**pooled wallet**. Customers integrate one HTTP API and never manage a wallet or signing
+key.
 
-- **`payment-daemon` (receiver):** off-chain balance ledger + redemption of winning
-  tickets on-chain.
-- **On-chain `TicketBroker` (Arbitrum One):** validates redeemed tickets and pays the
-  orchestrator's recipient (cold-key) address.
-- **`pool-payout-executor`:** for pooled orchestrators, distributes realized round
-  revenue to members as native-ETH payouts on Arbitrum.
+It is a single Python/FastAPI service (the `livepeer-open-clearinghouse-gateway`
+container) that runs alongside Postgres and, from
+[livepeer-network-modules](../repos/livepeer-network-modules.md), the `payment-daemon`
+(sender) and `service-registry-daemon` (resolver).
 
-So: payment-daemon = sender/receiver session + settlement; pool-payout-executor =
-inter-member distribution. Together they cover clearing for the supply side.
+## Control plane, not data plane (handoff mode)
 
-## SDKs
+The clearinghouse mints a payment envelope and **hands it off** to the customer's SDK,
+which then talks to the orchestrator broker **directly**. The clearinghouse is not on the
+hot media/inference path. Charging is **expected-value at issuance** (encumbered from the
+credit balance when the ticket is minted), reconciled to actual usage at settle time.
 
-The first repo ships `customer-portal` (a TS shared library with billing/ledger/Stripe
-surfaces) — see [SDKs](sdks.md). Whether a separate clearinghouse SDK exists is TBD.
+- **Jobs** — one-shot request/response work: mint → call broker → settle once.
+- **Sessions** — long-lived, refillable work: open → refill on `Livepeer-Balance-Low` →
+  close, with a background janitor reconciling against the daemon's authoritative
+  `GetSessionDebits`.
+
+See the repo doc for the full flow and the
+[`docs/HANDOFF_MODE.md`](../../modules/livepeer-open-clearinghouse/docs/HANDOFF_MODE.md).
+
+## What it owns
+
+Auth/accounts, API keys, **billing** (credit ledger, top-ups, spend caps, auto-replenish),
+discovery proxy, jobs/sessions issuance + settlement, usage reconciliation, telemetry,
+notifications, and an operator admin console (incl. SDK approval registry + signed SDK
+manifest).
+
+## Boundary vs Payment and the network-modules clearing function
+
+- [Payment](payment.md) is the **ticket primitive + on-chain settlement** (`payment-daemon`
+  + `TicketBroker`), shared infrastructure.
+- This clearinghouse is the **customer-facing credit + mint-on-behalf control plane** that
+  sits in front of it.
+- The supply-side **`pool-payout-executor`** (in network-modules) handles member payout
+  distribution — a distinct clearing concern from this demand-side clearinghouse.
 
 ## Role in the suite
 
-- **Settles:** payments from [Payment](payment.md) between [Gateways](gateways.md) and
-  [Orchestrators](orchestrators.md).
-- **Distributes:** pooled revenue to [Pools](pools.md) members.
+- **Fronts:** customer apps (via [SDKs](sdks.md)).
+- **Consumes:** [Payment](payment.md) (`payment-daemon`) and [Discover](discover.md)
+  (`service-registry-daemon`) from network-modules.
+- **Hands off to:** the [Orchestrators](orchestrators.md) broker (SDK ↔ broker direct).
 
 ## Confirmed / open
 
-- ✅ Clearing is realized via receiver + on-chain `TicketBroker` + `pool-payout-executor`.
-- [ ] Is there a dedicated Payment Clearinghouse repo (with its own SDKs) coming? Confirm
-  and, if so, re-scope this spec to it.
-- [ ] Exact Payment↔Clearinghouse responsibility split once any dedicated repo lands.
+- ✅ Dedicated, non-custodial clearinghouse; pooled wallet held only by `payment-daemon`.
+- ✅ Handoff-mode jobs/sessions; EV-at-issuance with settle-time reconciliation.
+- [ ] Repo is pre-alpha; horizontal scaling, blocked-SDK enforcement, and some operator
+  tooling are deferred (v1.1/v2). Track maturity via the repo's `docs/QUALITY_SCORE.md`.

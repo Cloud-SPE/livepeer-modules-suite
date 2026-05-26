@@ -28,6 +28,9 @@ Payment Clearinghouse (+ SDKs) · Reference Apps. See
 - **[livepeer-network-modules](docs/repos/livepeer-network-modules.md)** — the
   supply-side core (workload-agnostic capability broker + payment, pools, registry,
   discovery, protocol, trust spine). The first abstraction layer over the smart contracts.
+- **[livepeer-open-clearinghouse](docs/repos/livepeer-open-clearinghouse.md)** — the
+  demand-side, non-custodial Payment Clearinghouse (auth, prepaid credit, mint-on-behalf,
+  handoff-mode jobs/sessions). Consumes the network-modules daemons.
 
 ## Getting the code
 

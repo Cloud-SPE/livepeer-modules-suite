@@ -1,36 +1,46 @@
 # SDKs
 
-**Status:** 🟠 Partial via [livepeer-network-modules](../repos/livepeer-network-modules.md) (`95c6415`)
-**Submodule(s):** `modules/livepeer-network-modules/customer-portal/` (more TBD)
+**Status:** 🟠 Documented via [livepeer-open-clearinghouse](../repos/livepeer-open-clearinghouse.md) (`a529592`) + customer-portal in [livepeer-network-modules](../repos/livepeer-network-modules.md)
+**Submodule(s):** `modules/livepeer-open-clearinghouse/`, `modules/livepeer-network-modules/customer-portal/`
 
 ## What this is
 
-**SDKs** are the client libraries that let applications and modules integrate with the
-suite without reimplementing protocol details. So far the only library-shaped surface
-onboarded is **`customer-portal`**, a shared **TypeScript** SaaS library (not a deployed
-service) consumed across the workspace via `workspace:*`.
+**SDKs** are the client libraries that let applications integrate with the suite without
+reimplementing protocol details. In the handoff-mode model, the **SDK is the data-plane
+client**: it gets a minted payment envelope from the [Payment
+Clearinghouse](payment-clearinghouse.md), talks to the orchestrator broker directly, and
+reports usage back for settlement.
 
-`customer-portal` exposes subpaths for `auth` (API-key auth), `billing` (customer ledger,
-Stripe top-ups), `payment`, `middleware` (Fastify pre-handlers), `admin` (operator admin
-engine), `db`, and `registry`, plus a Lit + RxJS frontend widget catalog.
+## What exists today
 
-## Role in the suite
-
-- **Wraps / supports:** customer accounts, billing, and admin surfaces used by
-  [Gateways](gateways.md) and the [Payment Clearinghouse](payment-clearinghouse.md)
-  function.
-- **Consumed by:** gateway shells and (future) [Reference Apps](reference-apps.md).
+- **Reference SDKs** — in the clearinghouse repo's
+  [`examples/`](../../modules/livepeer-open-clearinghouse/examples/): `python`,
+  `typescript`, `go`, `rust`, plus a published `openapi.json`.
+- **SDK governance** — the clearinghouse admin domain runs an **SDK approval registry**
+  (keyed on `(lang, version, git_sha7)`) and publishes a **signed SDK manifest**
+  (`GET /v1/sdk/manifest`, EdDSA) that SDKs check at startup (advisory in v1). SDKs
+  identify via the `Livepeer-Open-Clearinghouse-SDK: <lang>/<semver>/<git_sha7>` header.
+- **Telemetry ingest** — SDKs can post events to `POST /v1/telemetry`.
+- **Conformance harness** — [`conformance/`](../../modules/livepeer-open-clearinghouse/conformance/)
+  (mock broker + mock clearinghouse + scenario runners).
+- **customer-portal** (network-modules) — a TS SaaS-shell library (API keys, ledger,
+  Stripe billing, admin UI widgets), distinct from the client SDKs above.
 
 ## SDK catalog
 
-| SDK | Language(s) | Wraps | Package / install | Repo | Status |
-| --- | --- | --- | --- | --- | --- |
-| customer-portal | TypeScript | API keys, ledger, Stripe billing, admin UI | `workspace:*` (pnpm) | livepeer-network-modules | 🟠 Shipped (library) |
+| SDK | Language(s) | Wraps | Where | Status |
+| --- | --- | --- | --- | --- |
+| Reference SDKs | Python, TypeScript, Go, Rust | Clearinghouse HTTP API + broker handoff | `livepeer-open-clearinghouse/examples/` | 🟠 Reference (lint + coverage gated) |
+| customer-portal | TypeScript | SaaS shell: API keys, ledger, Stripe, admin UI | `livepeer-network-modules/customer-portal/` | 🟠 Shipped (library) |
 
-## To document as more SDKs arrive
+## Role in the suite
 
-- [ ] Are there client SDKs for the Gateway/Payment/Clearinghouse wire APIs (beyond the
-  SaaS-shell library)?
-- [ ] Languages and public package registries (npm, PyPI, Go module, …)
-- [ ] Compatibility matrix vs the modules they wrap
-- [ ] Quickstart per SDK
+- **Wraps:** the [Payment Clearinghouse](payment-clearinghouse.md) HTTP API and the
+  [Orchestrators](orchestrators.md) broker (data-plane handoff).
+- **Consumed by:** [Reference Apps](reference-apps.md) and external applications.
+
+## To document as SDKs mature
+
+- [ ] Are the `examples/` SDKs published to package registries (PyPI/npm/Go/crates) or
+  example-only? Confirm and add install coords.
+- [ ] Per-SDK quickstart and compatibility matrix vs the clearinghouse API version.

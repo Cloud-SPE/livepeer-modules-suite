@@ -4,11 +4,11 @@ Top-level map of the Livepeer Modules Suite: what the domains are, how a unit of
 flows through them, and where the boundaries sit. This is a bird's-eye view — each
 module's detail lives in [`docs/product-specs/`](docs/product-specs/index.md).
 
-> **Status.** The supply-side shape below is now confirmed against the first onboarded
-> repo, [livepeer-network-modules](docs/repos/livepeer-network-modules.md) (see its own
-> [architecture-overview](modules/livepeer-network-modules/docs/design-docs/architecture-overview.md)).
-> The **demand-side Gateway shell, Runners, and reference apps are not in that repo** —
-> they're expected as separate repos, so those parts remain provisional until onboarded.
+> **Status.** The supply side is confirmed against
+> [livepeer-network-modules](docs/repos/livepeer-network-modules.md) and the demand-side
+> control plane against [livepeer-open-clearinghouse](docs/repos/livepeer-open-clearinghouse.md).
+> A standalone full **Gateway shell**, concrete **Runner** backends, and **reference apps**
+> are not yet onboarded, so those parts remain provisional.
 
 ## The big picture
 
@@ -92,6 +92,29 @@ Payment is probabilistic micropayment **tickets** settled via the on-chain `Tick
 
 See [`docs/repos/livepeer-network-modules.md`](docs/repos/livepeer-network-modules.md)
 for the component map and the [glossary](docs/glossary.md) for terms.
+
+## Demand side, grounded
+
+The [Payment Clearinghouse](docs/repos/livepeer-open-clearinghouse.md) is how app
+developers reach the network without managing wallets or keys. It is **non-custodial at
+the user boundary**: developers hold a wei credit balance; an operator-owned **pooled
+wallet** (held only by `payment-daemon`) signs every ticket.
+
+It operates in **handoff mode** — it is the control plane, not the data plane:
+
+1. The customer's **SDK** calls the clearinghouse to open a **job** (one-shot) or
+   **session** (long-lived, refillable).
+2. The clearinghouse resolves a route via `service-registry-daemon`, checks the credit
+   balance, mints a ticket via `payment-daemon.CreatePayment`, and **encumbers expected
+   value at issuance**.
+3. It returns the signed envelope; the **SDK talks to the orchestrator broker directly**
+   and reports actual usage back for settle-time reconciliation.
+
+So the gateway role is split: **control plane** (auth, credit, discovery proxy, mint) in
+the clearinghouse; **data plane** (interaction-mode transport, `Livepeer-Payment`) in the
+SDK. The clearinghouse **consumes the supply-side daemons** (`payment-daemon`,
+`service-registry-daemon`) over Unix-socket gRPC — the first concrete cross-repo
+dependency in the suite.
 
 ## Domains & boundaries
 

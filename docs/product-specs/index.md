@@ -12,15 +12,15 @@ implement several capabilities.
 
 | Module | Spec | Implemented in | Status |
 | --- | --- | --- | --- |
-| Gateways | [gateways.md](gateways.md) | _contracts only in_ [livepeer-network-modules](../repos/livepeer-network-modules.md); shell TBD | 🟡 Stub — awaiting gateway repo |
+| Gateways | [gateways.md](gateways.md) | control-plane half in [open-clearinghouse](../repos/livepeer-open-clearinghouse.md); data plane in SDK; full shell TBD | 🟠 Partial (split role) |
 | Orchestrators | [orchestrators.md](orchestrators.md) | [livepeer-network-modules](../repos/livepeer-network-modules.md) | 🟠 Documented |
 | Runners | [runners.md](runners.md) | contracts in [livepeer-network-modules](../repos/livepeer-network-modules.md); backends TBD | 🟠 Documented (concept) |
 | Pools | [pools.md](pools.md) | [livepeer-network-modules](../repos/livepeer-network-modules.md) | 🟠 Documented |
-| Payment | [payment.md](payment.md) | [livepeer-network-modules](../repos/livepeer-network-modules.md) | 🟠 Documented |
+| Payment | [payment.md](payment.md) | [livepeer-network-modules](../repos/livepeer-network-modules.md) (+ issuance via [open-clearinghouse](../repos/livepeer-open-clearinghouse.md)) | 🟠 Documented |
 | Service Registry | [service-registry.md](service-registry.md) | [livepeer-network-modules](../repos/livepeer-network-modules.md) | 🟠 Documented |
-| Discover | [discover.md](discover.md) | [livepeer-network-modules](../repos/livepeer-network-modules.md) | 🟠 Documented |
-| Payment Clearinghouse | [payment-clearinghouse.md](payment-clearinghouse.md) | _partial in_ [livepeer-network-modules](../repos/livepeer-network-modules.md) | 🟠 Partial |
-| SDKs | [sdks.md](sdks.md) | `customer-portal` in [livepeer-network-modules](../repos/livepeer-network-modules.md) | 🟠 Partial |
+| Discover | [discover.md](discover.md) | [livepeer-network-modules](../repos/livepeer-network-modules.md) (+ proxy in [open-clearinghouse](../repos/livepeer-open-clearinghouse.md)) | 🟠 Documented |
+| Payment Clearinghouse | [payment-clearinghouse.md](payment-clearinghouse.md) | [livepeer-open-clearinghouse](../repos/livepeer-open-clearinghouse.md) | 🟠 Documented |
+| SDKs | [sdks.md](sdks.md) | [open-clearinghouse](../repos/livepeer-open-clearinghouse.md) `examples/` + `customer-portal` in [network-modules](../repos/livepeer-network-modules.md) | 🟠 Documented |
 | Reference Apps | [reference-apps.md](reference-apps.md) | TBD (removed from network-modules) | 🟡 Stub — awaiting repo |
 
 ## Status legend

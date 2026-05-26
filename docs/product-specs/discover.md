@@ -23,10 +23,19 @@ per-capability lookup table.
 2. Hot path: `Resolver.Select(...)` returns a cached route. Selection also applies live
    broker health (route admission) and, on the gateway, local recent-outcome cooldowns.
 
+## Consumers
+
+- **Gateway / SDK** call the resolver directly for hot-path selection.
+- The [Payment Clearinghouse](payment-clearinghouse.md) exposes an **auth-aware discovery
+  proxy** (its `discovery` domain) over `service-registry-daemon` — `Resolve` / `Select` /
+  `SelectMany` with an in-process TTL cache — so customers can list capabilities,
+  orchestrators, and routes through the same authenticated HTTP API. `SelectedRoute.extra`
+  carries the `interaction_mode`.
+
 ## Role in the suite
 
 - **Reads:** [Service Registry](service-registry.md) (on-chain pointer + signed manifest).
-- **Serves:** [Gateways](gateways.md).
+- **Serves:** [Gateways](gateways.md), SDKs, and the [Payment Clearinghouse](payment-clearinghouse.md) proxy.
 - **Selects among:** [Orchestrators](orchestrators.md) / [Pools](pools.md).
 
 ## Confirmed / open

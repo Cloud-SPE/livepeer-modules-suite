@@ -5,7 +5,8 @@ onboarded repositories actually say; terms that aren't yet confirmed against cod
 marked _(draft)_. Keep this current as repos are onboarded — it is the fastest way for a
 new reader (human or agent) to get oriented.
 
-Sources so far: [`livepeer-network-modules`](repos/livepeer-network-modules.md).
+Sources so far: [`livepeer-network-modules`](repos/livepeer-network-modules.md),
+[`livepeer-open-clearinghouse`](repos/livepeer-open-clearinghouse.md).
 
 ## Suite & roles
 
@@ -132,6 +133,47 @@ Sources so far: [`livepeer-network-modules`](repos/livepeer-network-modules.md).
 - **Work receipt / round receipt / payout intent** — the accounting chain: per-request
   receipts → aggregated per-round receipts → per-member payable intents
   (`pending → exported → leased → submitted → paid` / `failed`).
+
+## Clearinghouse (demand-side control plane)
+
+From [`livepeer-open-clearinghouse`](repos/livepeer-open-clearinghouse.md).
+
+- **Clearinghouse** — a service between app developers and the network that manages
+  credit balances and mints signed payment tickets on developers' behalf, so they use a
+  normal HTTP API instead of managing wallets/keys.
+- **Non-custodial (at the user boundary)** — developers never hold an on-chain key or
+  wallet; they hold a wei credit balance. The **operator** holds the signing wallet
+  (custodial at the network boundary).
+- **Pooled wallet** — one operator-owned hot wallet (V3 keystore), held only by
+  `payment-daemon`, that signs every customer's tickets. The clearinghouse never sees
+  keystore material.
+- **Credit balance / credit ledger** — a per-user wei balance (source of truth is an
+  append-only ledger; the balance row is a denormalized cache for fast locking).
+- **Spend cap** — a rolling-window limit on how much wei a user can bill per period.
+- **Auto-replenish** — automatic top-up from the operator pool when a balance drops below
+  a threshold.
+- **API key** — per-user credential, shown once and stored as `sha256(pepper‖key)`, with
+  a short display prefix.
+- **Handoff mode** — the clearinghouse mints a payment envelope and hands it to the SDK,
+  which talks to the broker **directly**; the clearinghouse is control plane only, not in
+  the data path.
+- **Job** — a one-shot handoff-mode unit of work: mint → call broker → settle once.
+- **Session** — a long-lived, refillable handoff-mode unit of work
+  (`open → draining → closed`), topped up on a `Livepeer-Balance-Low` signal.
+- **EV-at-issuance** — the customer is charged the ticket's expected value when it's
+  minted (not on on-chain redemption), then trued up at settle time.
+- **Settlement / usage reconciliation** — the customer reports actual work units; the
+  clearinghouse refunds the unused encumbrance. Idempotent (first report wins).
+- **Reconciliation janitor** — a background job that cross-checks SDK self-reports against
+  the daemon's authoritative `GetSessionDebits`.
+- **Deposit snapshot** — a periodic poll of `payment-daemon.GetDepositInfo` recording the
+  pooled wallet's on-chain deposit/reserve for operator observability.
+- **SDK manifest** — an operator-published, EdDSA-signed list of approved/deprecated SDK
+  versions that SDKs check at startup (advisory in v1).
+- **SDK approval registry** — operator-curated allow/deprecate/block list keyed on
+  `(lang, version, git_sha7)`.
+- **Operator approval** — operator gate that activates a new user account (with an initial
+  credit grant and caps).
 
 ## Protocol & platform
 

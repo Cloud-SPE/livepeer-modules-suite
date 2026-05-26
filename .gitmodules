@@ -1,3 +1,6 @@
 [submodule "modules/livepeer-network-modules"]
 	path = modules/livepeer-network-modules
 	url = git@github.com:Cloud-SPE/livepeer-network-modules.git
+[submodule "modules/livepeer-open-clearinghouse"]
+	path = modules/livepeer-open-clearinghouse
+	url = git@github.com:Cloud-SPE/livepeer-open-clearinghouse.git

@@ -51,7 +51,8 @@ One line each. Full specs in [`docs/product-specs/`](docs/product-specs/index.md
 
 | Repo | Implements | Doc |
 | --- | --- | --- |
-| livepeer-network-modules | Supply-side core: Orchestrators, Runners, Pools, Payment, Service Registry, Discover, Protocol, SDKs (partial Clearinghouse) | [repos/livepeer-network-modules](docs/repos/livepeer-network-modules.md) |
+| livepeer-network-modules | Supply-side core: Orchestrators, Runners, Pools, Payment, Service Registry, Discover, Protocol, SDKs | [repos/livepeer-network-modules](docs/repos/livepeer-network-modules.md) |
+| livepeer-open-clearinghouse | Demand-side control plane: Payment Clearinghouse, Payment issuance, SDKs, Discover proxy, gateway control-plane half. Consumes network-modules daemons. | [repos/livepeer-open-clearinghouse](docs/repos/livepeer-open-clearinghouse.md) |
 
 The end-to-end picture (how a unit of work flows through these capabilities) is in
 [`ARCHITECTURE.md`](ARCHITECTURE.md).
@@ -100,8 +101,9 @@ docs/
 
 ## Status
 
-First repo onboarded: **`livepeer-network-modules`** (supply-side core) is added as a
-submodule and documented. Most supply-side capabilities are now 🟠 Documented; Gateways
-and Reference Apps await their own repos. Per-capability status is in
-[`docs/product-specs/index.md`](docs/product-specs/index.md); per-repo status in
-[`docs/repos/index.md`](docs/repos/index.md).
+Two repos onboarded: **`livepeer-network-modules`** (supply-side core) and
+**`livepeer-open-clearinghouse`** (demand-side, non-custodial Payment Clearinghouse that
+consumes the network-modules daemons). Most capabilities are now 🟠 Documented; a
+standalone full gateway shell and Reference Apps await their own repos. Per-capability
+status is in [`docs/product-specs/index.md`](docs/product-specs/index.md); per-repo status
+in [`docs/repos/index.md`](docs/repos/index.md).

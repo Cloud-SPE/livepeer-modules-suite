@@ -7,7 +7,11 @@ capabilities — see each repo doc for the mapping.
 
 | Repo | Path | Implements (capabilities) | Pinned | Status |
 | --- | --- | --- | --- | --- |
-| [livepeer-network-modules](livepeer-network-modules.md) | `modules/livepeer-network-modules/` | Orchestrators, Runners, Pools, Payment, Service Registry, Discover, Protocol, (partial) Payment Clearinghouse, SDKs (customer-portal) | `95c6415` | 🟠 Onboarded — documented |
+| [livepeer-network-modules](livepeer-network-modules.md) | `modules/livepeer-network-modules/` | Orchestrators, Runners, Pools, Payment, Service Registry, Discover, Protocol, SDKs (customer-portal) | `95c6415` | 🟠 Onboarded — documented |
+| [livepeer-open-clearinghouse](livepeer-open-clearinghouse.md) | `modules/livepeer-open-clearinghouse/` | Payment Clearinghouse, Payment (issuance), SDKs, Discover (proxy), Gateways (control-plane half) | `a529592` | 🟠 Onboarded — documented |
+
+**Cross-repo dependency:** `livepeer-open-clearinghouse` consumes the `payment-daemon`
+and `service-registry-daemon` from `livepeer-network-modules` over Unix-socket gRPC.
 
 ## Status legend
 

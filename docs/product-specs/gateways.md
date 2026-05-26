@@ -12,7 +12,14 @@ transport, and forwards traffic. Historically this role was the "Broadcaster."
 The first repo ([livepeer-network-modules](../repos/livepeer-network-modules.md)) defines
 the **contracts a gateway talks to** but no longer contains a gateway shell — the named
 gateway products and `gateway-adapters` were removed from its working tree (2026-05-19).
-Expect the gateway shell(s) to arrive as **separate repos**.
+
+**The gateway role is split in practice.** The
+[Payment Clearinghouse](../repos/livepeer-open-clearinghouse.md) (the
+`livepeer-open-clearinghouse-gateway` service) owns the **control-plane half** — auth,
+credit, discovery proxy, and minting the payment envelope — while the **data-plane half**
+(talking the broker's interaction modes, sending `Livepeer-Payment`, reading work units)
+lives in the customer's [SDK](sdks.md). A standalone, full data-plane gateway shell may
+still arrive as its own repo.
 
 ## What the contracts tell us a gateway does
 

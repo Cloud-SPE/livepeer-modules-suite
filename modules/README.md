@@ -13,11 +13,13 @@ repo↔capability mapping lives in each [`docs/repos/<repo>.md`](../docs/repos/i
 
 ```text
 modules/
-└── livepeer-network-modules/   # supply-side core (pinned 95c6415)
+├── livepeer-network-modules/    # supply-side core (pinned 95c6415)
+└── livepeer-open-clearinghouse/ # demand-side clearinghouse (pinned a529592)
 ```
 
-- Doc: [`../docs/repos/livepeer-network-modules.md`](../docs/repos/livepeer-network-modules.md)
+- Docs: [`../docs/repos/livepeer-network-modules.md`](../docs/repos/livepeer-network-modules.md),
+  [`../docs/repos/livepeer-open-clearinghouse.md`](../docs/repos/livepeer-open-clearinghouse.md)
 - Canonical map: [`../AGENTS.md`](../AGENTS.md)
 
-Expected next (per the suite taxonomy): gateway shell(s), runner backends, and reference
-apps, as separate repos.
+Expected next (per the suite taxonomy): a standalone gateway shell, runner backends, and
+reference apps, as separate repos.
