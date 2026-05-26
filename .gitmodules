@@ -13,3 +13,6 @@
 [submodule "modules/livepeer-modules-transcode-gateway"]
 	path = modules/livepeer-modules-transcode-gateway
 	url = git@github.com:Cloud-SPE/livepeer-modules-transcode-gateway.git
+[submodule "modules/livepeer-modules-openai-gateway"]
+	path = modules/livepeer-modules-openai-gateway
+	url = git@github.com:Cloud-SPE/livepeer-modules-openai-gateway.git

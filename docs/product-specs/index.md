@@ -12,7 +12,7 @@ implement several capabilities.
 
 | Module | Spec | Implemented in | Status |
 | --- | --- | --- | --- |
-| Gateways | [gateways.md](gateways.md) | full gateway [transcode-gateway](../repos/livepeer-modules-transcode-gateway.md); control-plane variant in [open-clearinghouse](../repos/livepeer-open-clearinghouse.md) | 🟠 Documented |
+| Gateways | [gateways.md](gateways.md) | full gateways [openai-gateway](../repos/livepeer-modules-openai-gateway.md) (AI) + [transcode-gateway](../repos/livepeer-modules-transcode-gateway.md) (video); control-plane variant in [open-clearinghouse](../repos/livepeer-open-clearinghouse.md) | 🟠 Documented |
 | Orchestrators | [orchestrators.md](orchestrators.md) | [livepeer-network-modules](../repos/livepeer-network-modules.md) | 🟠 Documented |
 | Runners | [runners.md](runners.md) | [livepeer-modules-openai-runners](../repos/livepeer-modules-openai-runners.md) (backends) + contracts in [network-modules](../repos/livepeer-network-modules.md) | 🟠 Documented |
 | Pools | [pools.md](pools.md) | [livepeer-network-modules](../repos/livepeer-network-modules.md) | 🟠 Documented |

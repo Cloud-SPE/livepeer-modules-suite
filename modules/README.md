@@ -17,11 +17,12 @@ modules/
 ├── livepeer-open-clearinghouse/        # demand-side clearinghouse (pinned a529592)
 ├── livepeer-modules-openai-runners/    # AI runner backends (pinned 3ea3f17)
 ├── livepeer-modules-transcode-runners/ # video runner backends (pinned b33e32f)
-└── livepeer-modules-transcode-gateway/ # full video gateway (pinned 4086880)
+├── livepeer-modules-transcode-gateway/ # full video gateway (pinned 4086880)
+└── livepeer-modules-openai-gateway/    # full OpenAI-compatible AI gateway (pinned 5afaf96)
 ```
 
 - Docs: [`../docs/repos/`](../docs/repos/index.md) — one per repo
 - Canonical map: [`../AGENTS.md`](../AGENTS.md)
 
-Expected next (per the suite taxonomy): an OpenAI/daydream gateway, vtuber runner
-backends, and reference apps, as separate repos.
+Expected next (per the suite taxonomy): a daydream gateway, vtuber runner backends, and
+reference apps, as separate repos.

@@ -40,6 +40,9 @@ Payment Clearinghouse (+ SDKs) · Reference Apps. See
 - **[livepeer-modules-transcode-gateway](docs/repos/livepeer-modules-transcode-gateway.md)** —
   a full in-path video Gateway (VOD ABR + live RTMP→HLS) with a thin SaaS shell; a distinct
   demand-side front door from the clearinghouse.
+- **[livepeer-modules-openai-gateway](docs/repos/livepeer-modules-openai-gateway.md)** —
+  a full in-path OpenAI-compatible AI Gateway ("change `base_url`"); the AI twin of the
+  transcode-gateway, fronting the openai-runners.
 
 ## Getting the code
 

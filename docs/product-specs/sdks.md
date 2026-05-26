@@ -23,6 +23,10 @@ reports usage back for settlement.
 - **Telemetry ingest** — SDKs can post events to `POST /v1/telemetry`.
 - **Conformance harness** — [`conformance/`](../../modules/livepeer-open-clearinghouse/conformance/)
   (mock broker + mock clearinghouse + scenario runners).
+- **OpenAI wire compatibility** — the [openai-gateway](../repos/livepeer-modules-openai-gateway.md)
+  is OpenAI-API-compatible, so **existing OpenAI SDKs work unchanged** by pointing
+  `base_url` at the gateway ("change `base_url`, keep your client code"). No bespoke client
+  needed for that surface.
 - **customer-portal** (network-modules) — a TS SaaS-shell library (API keys, ledger,
   Stripe billing, admin UI widgets), distinct from the client SDKs above.
 

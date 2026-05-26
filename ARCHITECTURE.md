@@ -136,13 +136,15 @@ discovery proxy, mint) in the clearinghouse; **data plane** (interaction-mode tr
 `Livepeer-Payment`) in the SDK. It **consumes the supply-side daemons** (`payment-daemon`,
 `service-registry-daemon`) over Unix-socket gRPC.
 
-**There is a second, distinct demand-side surface:** the
-[transcode-gateway](docs/repos/livepeer-modules-transcode-gateway.md) is a *full* gateway
-that talks to the same daemons directly but **pays the network itself** (customers pay
-nothing in v1) and stays **in the data path** (it owns the RTMP endpoint and relays
-frames). The two are alternative front doors — non-custodial credit + handoff
-(clearinghouse) vs. operator-funded in-path gateway (transcode-gateway) — not layers of
-one stack. See [Gateways](docs/product-specs/gateways.md).
+**There are also two full in-path gateways** that talk to the same daemons directly but
+**pay the network themselves** (customers pay nothing in v1) and stay in the data path:
+the [openai-gateway](docs/repos/livepeer-modules-openai-gateway.md) (OpenAI-compatible AI,
+fronting the openai-runners) and the
+[transcode-gateway](docs/repos/livepeer-modules-transcode-gateway.md) (video, owns the
+RTMP endpoint, fronting the transcode-runners). So there are **three alternative demand-side
+front doors** — non-custodial credit + handoff (clearinghouse) vs. two operator-funded
+in-path gateways — not layers of one stack. A deployment picks one. See
+[Gateways](docs/product-specs/gateways.md).
 
 ## Domains & boundaries
 
