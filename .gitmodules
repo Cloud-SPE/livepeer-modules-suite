@@ -4,3 +4,6 @@
 [submodule "modules/livepeer-open-clearinghouse"]
 	path = modules/livepeer-open-clearinghouse
 	url = git@github.com:Cloud-SPE/livepeer-open-clearinghouse.git
+[submodule "modules/livepeer-modules-openai-runners"]
+	path = modules/livepeer-modules-openai-runners
+	url = git@github.com:Cloud-SPE/livepeer-modules-openai-runners.git

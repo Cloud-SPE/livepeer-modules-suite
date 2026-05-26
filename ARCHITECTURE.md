@@ -4,11 +4,13 @@ Top-level map of the Livepeer Modules Suite: what the domains are, how a unit of
 flows through them, and where the boundaries sit. This is a bird's-eye view — each
 module's detail lives in [`docs/product-specs/`](docs/product-specs/index.md).
 
-> **Status.** The supply side is confirmed against
-> [livepeer-network-modules](docs/repos/livepeer-network-modules.md) and the demand-side
-> control plane against [livepeer-open-clearinghouse](docs/repos/livepeer-open-clearinghouse.md).
-> A standalone full **Gateway shell**, concrete **Runner** backends, and **reference apps**
-> are not yet onboarded, so those parts remain provisional.
+> **Status.** Confirmed against three onboarded repos: the supply side
+> ([livepeer-network-modules](docs/repos/livepeer-network-modules.md)), the demand-side
+> control plane ([livepeer-open-clearinghouse](docs/repos/livepeer-open-clearinghouse.md)),
+> and concrete AI Runner backends
+> ([livepeer-modules-openai-runners](docs/repos/livepeer-modules-openai-runners.md)). A
+> standalone full **Gateway shell**, **video/vtuber runners**, and **reference apps** are
+> not yet onboarded, so those parts remain provisional.
 
 ## The big picture
 
@@ -89,6 +91,11 @@ Discovery is **hybrid**: an on-chain pointer (`ServiceRegistry`/`AIServiceRegist
 A firewalled `secure-orch` holds the cold key and signs manifests; the public
 `orch-coordinator` only scrapes and publishes; every resolver re-verifies the signature.
 Payment is probabilistic micropayment **tickets** settled via the on-chain `TicketBroker`.
+
+Concrete runners now exist: the
+[openai-runners](docs/repos/livepeer-modules-openai-runners.md) repo ships
+OpenAI/Cohere-shaped AI backends (chat, embeddings, audio, TTS, image, rerank) that
+implement the broker↔runner HTTP contract and report work units back to the broker.
 
 See [`docs/repos/livepeer-network-modules.md`](docs/repos/livepeer-network-modules.md)
 for the component map and the [glossary](docs/glossary.md) for terms.

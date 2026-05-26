@@ -14,7 +14,7 @@ implement several capabilities.
 | --- | --- | --- | --- |
 | Gateways | [gateways.md](gateways.md) | control-plane half in [open-clearinghouse](../repos/livepeer-open-clearinghouse.md); data plane in SDK; full shell TBD | 🟠 Partial (split role) |
 | Orchestrators | [orchestrators.md](orchestrators.md) | [livepeer-network-modules](../repos/livepeer-network-modules.md) | 🟠 Documented |
-| Runners | [runners.md](runners.md) | contracts in [livepeer-network-modules](../repos/livepeer-network-modules.md); backends TBD | 🟠 Documented (concept) |
+| Runners | [runners.md](runners.md) | [livepeer-modules-openai-runners](../repos/livepeer-modules-openai-runners.md) (backends) + contracts in [network-modules](../repos/livepeer-network-modules.md) | 🟠 Documented |
 | Pools | [pools.md](pools.md) | [livepeer-network-modules](../repos/livepeer-network-modules.md) | 🟠 Documented |
 | Payment | [payment.md](payment.md) | [livepeer-network-modules](../repos/livepeer-network-modules.md) (+ issuance via [open-clearinghouse](../repos/livepeer-open-clearinghouse.md)) | 🟠 Documented |
 | Service Registry | [service-registry.md](service-registry.md) | [livepeer-network-modules](../repos/livepeer-network-modules.md) | 🟠 Documented |

@@ -9,9 +9,14 @@ capabilities — see each repo doc for the mapping.
 | --- | --- | --- | --- | --- |
 | [livepeer-network-modules](livepeer-network-modules.md) | `modules/livepeer-network-modules/` | Orchestrators, Runners, Pools, Payment, Service Registry, Discover, Protocol, SDKs (customer-portal) | `95c6415` | 🟠 Onboarded — documented |
 | [livepeer-open-clearinghouse](livepeer-open-clearinghouse.md) | `modules/livepeer-open-clearinghouse/` | Payment Clearinghouse, Payment (issuance), SDKs, Discover (proxy), Gateways (control-plane half) | `a529592` | 🟠 Onboarded — documented |
+| [livepeer-modules-openai-runners](livepeer-modules-openai-runners.md) | `modules/livepeer-modules-openai-runners/` | Runners (OpenAI/Cohere-shaped AI backends) | `3ea3f17` | 🟠 Onboarded — documented (v1.3.0, grade C) |
 
-**Cross-repo dependency:** `livepeer-open-clearinghouse` consumes the `payment-daemon`
-and `service-registry-daemon` from `livepeer-network-modules` over Unix-socket gRPC.
+**Cross-repo dependencies:**
+- `livepeer-open-clearinghouse` consumes `payment-daemon` and `service-registry-daemon`
+  from `livepeer-network-modules` over Unix-socket gRPC.
+- `livepeer-modules-openai-runners` sit **behind** the `capability-broker` in
+  `livepeer-network-modules` (broker = client, runner = HTTP server; see its
+  `BROKER-CONTRACT.md`).
 
 ## Status legend
 

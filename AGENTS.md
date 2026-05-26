@@ -53,6 +53,7 @@ One line each. Full specs in [`docs/product-specs/`](docs/product-specs/index.md
 | --- | --- | --- |
 | livepeer-network-modules | Supply-side core: Orchestrators, Runners, Pools, Payment, Service Registry, Discover, Protocol, SDKs | [repos/livepeer-network-modules](docs/repos/livepeer-network-modules.md) |
 | livepeer-open-clearinghouse | Demand-side control plane: Payment Clearinghouse, Payment issuance, SDKs, Discover proxy, gateway control-plane half. Consumes network-modules daemons. | [repos/livepeer-open-clearinghouse](docs/repos/livepeer-open-clearinghouse.md) |
+| livepeer-modules-openai-runners | Runner backends: OpenAI/Cohere-shaped AI services (chat, embeddings, audio, TTS, image, rerank) that sit behind the capability broker. | [repos/livepeer-modules-openai-runners](docs/repos/livepeer-modules-openai-runners.md) |
 
 The end-to-end picture (how a unit of work flows through these capabilities) is in
 [`ARCHITECTURE.md`](ARCHITECTURE.md).
@@ -101,9 +102,10 @@ docs/
 
 ## Status
 
-Two repos onboarded: **`livepeer-network-modules`** (supply-side core) and
-**`livepeer-open-clearinghouse`** (demand-side, non-custodial Payment Clearinghouse that
-consumes the network-modules daemons). Most capabilities are now 🟠 Documented; a
-standalone full gateway shell and Reference Apps await their own repos. Per-capability
-status is in [`docs/product-specs/index.md`](docs/product-specs/index.md); per-repo status
-in [`docs/repos/index.md`](docs/repos/index.md).
+Three repos onboarded: **`livepeer-network-modules`** (supply-side core),
+**`livepeer-open-clearinghouse`** (demand-side, non-custodial Payment Clearinghouse), and
+**`livepeer-modules-openai-runners`** (concrete AI Runner backends behind the broker).
+Most capabilities are now 🟠 Documented; a standalone full gateway shell, video/vtuber
+runners, and Reference Apps await their own repos. Per-capability status is in
+[`docs/product-specs/index.md`](docs/product-specs/index.md); per-repo status in
+[`docs/repos/index.md`](docs/repos/index.md).

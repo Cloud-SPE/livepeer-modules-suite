@@ -31,6 +31,9 @@ Payment Clearinghouse (+ SDKs) · Reference Apps. See
 - **[livepeer-open-clearinghouse](docs/repos/livepeer-open-clearinghouse.md)** — the
   demand-side, non-custodial Payment Clearinghouse (auth, prepaid credit, mint-on-behalf,
   handoff-mode jobs/sessions). Consumes the network-modules daemons.
+- **[livepeer-modules-openai-runners](docs/repos/livepeer-modules-openai-runners.md)** —
+  containerized AI Runner backends (chat, embeddings, audio, TTS, image, rerank) that sit
+  behind the capability broker.
 
 ## Getting the code
 

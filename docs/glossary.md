@@ -59,6 +59,36 @@ Sources so far: [`livepeer-network-modules`](repos/livepeer-network-modules.md),
   and normalizes the result to shared outward states: `ready`, `draining`, `degraded`,
   `unreachable`, `stale`.
 
+## Runner tier (AI backends)
+
+From [`livepeer-modules-openai-runners`](repos/livepeer-modules-openai-runners.md).
+
+- **Canonical capability** — the stable capability name a runner serves, e.g.
+  `openai-chat-completions`, `rerank` (see `CANONICAL-CAPABILITIES.md`). Renaming is a
+  breaking change. _(Note the hyphen form here vs the colon form in broker host-config
+  examples — mapping to be confirmed.)_
+- **`offering.yaml`** — manifest baked into each runner image at `/etc/runner/offering.yaml`
+  declaring capability, offerings, rate-card hints (billing unit), and model metadata; the
+  broker reads it for discovery + pricing.
+- **Options endpoint** — `GET /<capability>/options`; structured payload
+  (`served_model_name`, `extra`, `features`) the orch-coordinator scrapes; the broker
+  merges `extra` into host-config (operator values win).
+- **`X-Livepeer-Work-Units`** — response header (or streaming **trailer**) carrying the
+  integer work-unit count when it isn't a body field like `usage.total_tokens`.
+- **GPU fail-fast / `gpu_probe`** — ML runners exit non-zero at startup if `DEVICE=cuda`
+  but no GPU is present, instead of silently degrading.
+- **`CAPABILITY_NAME`** — env var (one value per image) selecting which canonical
+  capability a runner instance serves.
+- **Model downloader** — one-shot image that prefetches Hugging Face weights into a shared
+  volume before runners start.
+- **Smoke test (`openai-tester`)** — Node image that exercises every runner via the OpenAI
+  SDK.
+- **Shared base image** — `python-base` (CPU) and `cuda13-python-base` (GPU) that runner
+  images build `FROM`.
+- **Backends:** **vLLM** / **Ollama** (LLM serving for chat/embeddings), **Whisper**
+  (speech-to-text), **Kokoro** (text-to-speech), **diffusers** (image generation:
+  SDXL/RealVisXL/FLUX), **CrossEncoder** (reranking).
+
 ## Wire headers
 
 - **`Livepeer-Capability`** — opaque capability id on the request.

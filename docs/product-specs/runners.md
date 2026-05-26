@@ -1,30 +1,48 @@
 # Runners
 
-**Status:** 🟠 Documented (concept) via [livepeer-network-modules](../repos/livepeer-network-modules.md)
-**Submodule:** backends are external; the protocol is in `modules/livepeer-network-modules/livepeer-network-protocol/`
+**Status:** 🟠 Documented — first concrete backends in [livepeer-modules-openai-runners](../repos/livepeer-modules-openai-runners.md) (`3ea3f17`); contracts in [livepeer-network-modules](../repos/livepeer-network-modules.md)
+**Submodule(s):** `modules/livepeer-modules-openai-runners/` (+ broker contract in network-modules)
 
 ## What this is
 
 A **Runner** is the **backend that actually executes a workload** — the provided
-capability that an orchestrator's broker manages and serves to gateways. Examples:
-a vLLM/TGI server, an OpenAI-compatible API, an FFmpeg pipeline, or a long-lived
-session runtime.
+capability that an orchestrator's broker manages and serves to gateways. Examples now
+exist as concrete containers: chat, embeddings, audio (transcribe/translate), TTS, image
+generation, and rerank.
 
-The key design point: **runners are not a fixed binary or a daemon in the supply-side
-repo.** The [capability broker](orchestrators.md) is workload-agnostic — it dispatches
-to runners over standard wires (HTTP, WebSocket, RTMP, or a managed subprocess/session)
-declared in `host-config.yaml`. The broker knows the backend URL and the
-**interaction mode** contract; the runner itself is opaque to it.
+The key design point holds: **runners are not hard-coded into the broker.** The
+[capability broker](orchestrators.md) is workload-agnostic — it dispatches to runners over
+standard HTTP, declared in `host-config.yaml`. A runner receives a **fully-authenticated**
+request (the broker already handled payment/auth) and just does the work; it is **not**
+responsible for auth, billing, payment, or tenant identity.
 
-## How runners relate to the rest
+## The broker ↔ runner contract
 
-- **Declared by:** an operator, in the broker's `host-config.yaml` (backend transport +
-  URL + interaction mode + work unit + extractor + health probe).
-- **Dispatched to by:** the [capability broker](orchestrators.md), after payment is
-  validated.
-- **Metered by:** the declared **extractor** → `actualUnits` → [Payment](payment.md).
-- **Surfaced to:** [Gateways](gateways.md) only as capability tuples via
-  [Discover](discover.md); gateways never address a runner directly.
+Broker is the client, runner is the HTTP server. Every runner implements:
+
+- `POST <capability-path>` returning capability-shaped JSON and reporting **work units**
+  (a body field like `usage.total_tokens`, or an `X-Livepeer-Work-Units` header/trailer).
+- `GET /healthz` (broker liveness), `GET /<capability>/options` (orch-coordinator
+  discovery; broker merges the `extra` block into host-config), `GET /metrics` (opt-in).
+- A standard error contract (400/429/503/500) and, for ML runners, **GPU fail-fast**.
+
+Each image bakes an `offering.yaml` (capability, offerings, rate-card hints, model
+metadata) that drives broker discovery and pricing. See
+[`BROKER-CONTRACT.md`](../../modules/livepeer-modules-openai-runners/BROKER-CONTRACT.md)
+and [`RUNNER-INVARIANTS.md`](../../modules/livepeer-modules-openai-runners/RUNNER-INVARIANTS.md).
+
+## Concrete runners (openai-runners repo)
+
+| Capability | Runner | Backend | Mode |
+| --- | --- | --- | --- |
+| `openai-chat-completions` | openai-chat-runner (Go) | vLLM / Ollama | `http-stream@v0` |
+| `openai-text-embeddings` | openai-embeddings-runner (Go) | vLLM / Ollama | `http-reqresp@v0` |
+| `openai-audio-transcriptions` / `-translations` | openai-audio-runner (Py) | Whisper | request/response (multipart upload) |
+| `openai-audio-speech` | openai-tts-runner (Py) | Kokoro | `http-reqresp@v0` |
+| `image-generation` | openai-image-generation-runner (Py) | diffusers (SDXL/FLUX) | `http-reqresp@v0` |
+| `rerank` | rerank-runner (Py) | CrossEncoder | `http-reqresp@v0` |
+
+See the repo doc for the full table, model downloaders, and the smoke-test image.
 
 ## Runner shapes (by interaction mode)
 
@@ -36,12 +54,17 @@ declared in `host-config.yaml`. The broker knows the backend URL and the
 | `session-control-plus-media` | A local container/subprocess; broker owns the long-lived control + media plane |
 | `live-session-remote-runner` | An **external** runtime; broker keeps payment/session authority while the runner owns its own RTMP/HLS production |
 
-## Notes & open items
+## Role in the suite
 
-- The named runner product families (and gateway shells) were **removed from
-  `livepeer-network-modules`'s working tree** (2026-05-20); the contracts and the
-  `sessionrunner` protocol remain. Concrete runner implementations are expected to arrive
-  as **separate repos** — document them here and in [repos/](../repos/index.md) as they
-  land.
-- [ ] Confirm which runner repos exist and how each maps to an interaction mode.
-- [ ] Document the `sessionrunner` protocol surface once a remote-runner repo is onboarded.
+- **Declared by:** an operator in the broker's `host-config.yaml`.
+- **Dispatched to by:** the [capability broker](orchestrators.md), after payment validation.
+- **Metered by:** the work-unit field/header → [Payment](payment.md).
+- **Surfaced to:** [Gateways](gateways.md)/SDKs only as capability tuples via [Discover](discover.md).
+
+## Open items
+
+- [ ] **Capability naming:** runners use hyphen form (`openai-chat-completions`); broker
+  host-config examples used colon form (`openai:chat-completions`). Confirm the exact
+  end-to-end mapping carried by `Livepeer-Capability`.
+- [ ] **Video / vtuber runners** are sibling repos — onboard and document when provided.
+- [ ] openai-runners is v1.3.0 / grade C (not yet validated end-to-end on GPU).
