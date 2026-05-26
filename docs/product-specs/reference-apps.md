@@ -14,6 +14,13 @@ contained named gateway/reference families (e.g. an OpenAI gateway reference, vt
 video flows) but they were **removed from its working tree** (2026-05-19/20); their
 exec-plans remain as history. Expect reference apps to arrive as **separate repos**.
 
+> **Planned (TD-8):** the [openai-gateway](../repos/livepeer-modules-openai-gateway.md) and
+> [transcode-gateway](../repos/livepeer-modules-transcode-gateway.md) are **meant to become
+> the reference examples**. Once migrated off direct `service-registry-daemon`/`payment-daemon`
+> usage and onto the [clearinghouse](payment-clearinghouse.md) + [SDKs](sdks.md), they
+> demonstrate building on Livepeer without managing a wallet or on-chain complexity. See
+> [Gateways](gateways.md) for the as-is vs intended posture.
+
 ## Role in the suite
 
 - **Built on:** [Gateways](gateways.md) and [SDKs](sdks.md).

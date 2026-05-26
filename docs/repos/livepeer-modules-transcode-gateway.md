@@ -88,6 +88,11 @@ console). In production it's one Go process on one port serving `/`, `/portal/`,
 
 ## Notes & open items
 
+- **Intended as a reference example (TD-8):** this gateway currently embeds direct
+  `service-registry-daemon` + `payment-daemon` usage and an operator wallet. The plan is to
+  migrate it onto the [clearinghouse](livepeer-open-clearinghouse.md) + [SDKs](../product-specs/sdks.md)
+  and drop that direct daemon/wallet code, so it demonstrates SDK-based building without
+  on-chain/wallet complexity. It then becomes a [Reference App](../product-specs/reference-apps.md).
 - **Capability-name mismatch (TD-7):** this gateway queries `video:transcode.abr` /
   `video:transcode.live`, while the [transcode-runners](livepeer-modules-transcode-runners.md)
   offering manifests declare `video-transcode-abr` and

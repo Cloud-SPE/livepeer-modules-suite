@@ -73,6 +73,12 @@ broker host-config / registry is the bridge; the end-to-end mapping still needs 
 
 ## Notes & open items
 
+- **Intended as a reference example (TD-8):** like the video gateway, this currently embeds
+  direct `service-registry-daemon` + `payment-daemon` usage and an operator wallet. The plan
+  is to migrate it onto the [clearinghouse](livepeer-open-clearinghouse.md) +
+  [SDKs](../product-specs/sdks.md) and remove that direct daemon/wallet code, demonstrating
+  SDK-based building without on-chain/wallet complexity — folding it into the
+  [Reference Apps](../product-specs/reference-apps.md).
 - **Serves the AI runners:** its `/v1/*` capabilities line up with the
   [openai-runners](livepeer-modules-openai-runners.md) (chat, embeddings, images, audio,
   rerank).

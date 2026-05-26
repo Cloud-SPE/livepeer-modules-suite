@@ -146,6 +146,13 @@ front doors** — non-custodial credit + handoff (clearinghouse) vs. two operato
 in-path gateways — not layers of one stack. A deployment picks one. See
 [Gateways](docs/product-specs/gateways.md).
 
+> **Intended direction (TD-8).** The two operator-funded gateways are meant to be
+> **reference examples**, not standalone production stacks. The plan is to migrate them
+> onto the clearinghouse + SDKs and remove their direct `service-registry-daemon` /
+> `payment-daemon` / wallet code — so the long-term shape is: the **clearinghouse + SDKs is
+> the recommended path**, and the gateways become [reference apps](docs/product-specs/reference-apps.md)
+> showcasing how little a builder must handle.
+
 ## Observability side (off-network)
 
 A separate axis from supply/demand: two repos **track on-chain activity** rather than

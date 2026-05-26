@@ -30,6 +30,15 @@ themselves** (customers pay nothing in v1; thin SaaS shell, no billing). (3) dif
 customers hold credit and the SDK is the data plane. A deployment chooses one; all consume
 the same supply-side daemons.
 
+> **Direction (planned — TD-8).** The two full gateways are intended to be **reference
+> examples** of building on Livepeer, *not* standalone production stacks. The plan is to
+> migrate them to consume the [clearinghouse](payment-clearinghouse.md) + [SDKs](sdks.md)
+> and **remove the direct `service-registry-daemon`/`payment-daemon` and operator-wallet
+> code** — so they demonstrate how simple it is to build on the network via SDKs without
+> handling wallet or on-chain protocol complexity. After that migration they fold into
+> [Reference Apps](reference-apps.md), and pattern (3) becomes the recommended path with
+> (1)/(2) as its showcases.
+
 ## How a gateway works (transcode-gateway, grounded)
 
 - **Surface:** `/api/v1/abr*` (VOD ABR ladder), `/api/v1/live*` (RTMP→HLS),
