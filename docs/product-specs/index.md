@@ -23,6 +23,16 @@ implement several capabilities.
 | SDKs | [sdks.md](sdks.md) | [open-clearinghouse](../repos/livepeer-open-clearinghouse.md) `examples/` + `customer-portal` in [network-modules](../repos/livepeer-network-modules.md) | 🟠 Documented |
 | Reference Apps | [reference-apps.md](reference-apps.md) | TBD (removed from network-modules) | 🟡 Stub — awaiting repo |
 
+### Observability & Reporting (off-network)
+
+These **track on-chain activity** — they don't provide network supply or accept demand.
+They observe the economic output the network capabilities above produce on-chain.
+
+| Capability | Spec | Implemented in | Status |
+| --- | --- | --- | --- |
+| Protocol Explorer | [protocol-explorer.md](protocol-explorer.md) | [livepeer-protocol-explorer](../repos/livepeer-protocol-explorer.md) | 🟠 Documented |
+| Network Bot | [network-bot.md](network-bot.md) | [livepeer-network-bot](../repos/livepeer-network-bot.md) | 🟠 Documented |
+
 ## Status legend
 
 - 🟡 **Stub** — placeholder; describes intent only, no repo onboarded yet.

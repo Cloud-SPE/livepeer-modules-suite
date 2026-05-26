@@ -264,6 +264,45 @@ Note: this is a *full in-path gateway*, distinct from the non-custodial
 - **Zero-build SPA** — a Lit app using CDN ESM imports with no bundler, embedded into the
   Go binary via `//go:embed`.
 
+## Observability & on-chain accounting
+
+From [`livepeer-protocol-explorer`](repos/livepeer-protocol-explorer.md) and
+[`livepeer-network-bot`](repos/livepeer-network-bot.md). These observe the chain; they are
+**not** part of the network's supply/demand path.
+
+- **Protocol Explorer** — a data platform that indexes, prices, derives, and serves
+  Livepeer on-chain activity (API + web explorer).
+- **Deterministic replay** — same cached RPC inputs reproduce a bit-identical database;
+  the explorer's correctness guarantee.
+- **Valuation record** — an immutable, versioned row pricing one monetary event at its
+  block (amount in native + USD, method, source).
+- **TWAP** — time-weighted average price (here, a 30-min Uniswap V3 LPT/WETH window),
+  combined with **Chainlink** ETH/USD to value LPT/ETH amounts.
+- **Reorg handling / finality tracking** — marking events non-canonical after a chain
+  reorg / advancing an event's finality as L1 batches post (only finalized events are priced).
+- **Stake derivation** — computing per-block delegator/orchestrator stake from
+  Bond/Unbond/Rebond/Reward events.
+- **Rollup** — daily aggregate table (payouts/rewards/tickets/event-metrics) powering fast
+  summaries and **leaderboards**.
+- **ENS enrichment** — resolving ENS names/avatars for addresses.
+- **Delegator** — an address that **bonds** LPT to an orchestrator; **bond / unbond /
+  rebond / withdraw** are the stake lifecycle events.
+- **Round** — a protocol epoch (~1 day, `NewRound`); stake snapshots and reward minting
+  are keyed by round.
+- **WinningTicketRedeemed** — the `TicketBroker` event where an orchestrator redeems a
+  payment ticket (the on-chain form of the [Payment](product-specs/payment.md) layer's
+  output); the bot's primary signal.
+- **Payout digest** — a grouped Discord embed of WinningTicketRedeemed activity per
+  orchestrator (the bot's base-mode post).
+- **Delegator digest** — a per-subscriber DM summarizing bond/unbond/rebond/stake-increase
+  activity for a subscribed orchestrator (bot commands mode).
+- **Webhook post vs gateway bot** — base mode posts to a Discord **webhook** (public,
+  unauthenticated); commands mode runs an authenticated **gateway bot** (slash commands + DMs).
+- **Cursor / delivery tracking** — durable SQLite state so polling and posting resume
+  safely; rows are marked sent only after successful delivery.
+- **Snapshot test** — message-format test asserting embed output matches a checked-in
+  fixture (drift fails CI).
+
 ## Protocol & platform
 
 - **livepeer-network-protocol** — the spec repo (modes, extractors, manifest schema,

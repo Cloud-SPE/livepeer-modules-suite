@@ -44,6 +44,14 @@ Payment Clearinghouse (+ SDKs) · Reference Apps. See
   a full in-path OpenAI-compatible AI Gateway ("change `base_url`"); the AI twin of the
   transcode-gateway, fronting the openai-runners.
 
+**Observability & Reporting** (off-network — tracks on-chain activity):
+
+- **[livepeer-protocol-explorer](docs/repos/livepeer-protocol-explorer.md)** — a Rust data
+  platform that indexes, prices (per-block, deterministic), and serves Livepeer on-chain
+  activity via an HTTP API + web explorer.
+- **[livepeer-network-bot](docs/repos/livepeer-network-bot.md)** — a Discord bot that
+  reports payouts and activity by polling the protocol explorer's API.
+
 ## Getting the code
 
 ```bash

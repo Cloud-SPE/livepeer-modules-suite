@@ -16,3 +16,9 @@
 [submodule "modules/livepeer-modules-openai-gateway"]
 	path = modules/livepeer-modules-openai-gateway
 	url = git@github.com:Cloud-SPE/livepeer-modules-openai-gateway.git
+[submodule "modules/livepeer-protocol-explorer"]
+	path = modules/livepeer-protocol-explorer
+	url = git@github.com:Cloud-SPE/livepeer-protocol-explorer.git
+[submodule "modules/livepeer-network-bot"]
+	path = modules/livepeer-network-bot
+	url = git@github.com:Cloud-SPE/livepeer-network-bot.git

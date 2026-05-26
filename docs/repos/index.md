@@ -14,6 +14,13 @@ capabilities — see each repo doc for the mapping.
 | [livepeer-modules-transcode-gateway](livepeer-modules-transcode-gateway.md) | `modules/livepeer-modules-transcode-gateway/` | Gateways (full in-path video gateway), Discover, Payment | `4086880` | 🟠 Onboarded — documented (v1.3.0, grade C / tests F) |
 | [livepeer-modules-openai-gateway](livepeer-modules-openai-gateway.md) | `modules/livepeer-modules-openai-gateway/` | Gateways (OpenAI-compatible AI gateway), SDKs (wire-compat), Discover, Payment | `5afaf96` | 🟠 Onboarded — documented (v1.3.1+, grade C, 45 tests) |
 
+### Observability & Reporting (off-network — tracking, not supply/demand)
+
+| Repo | Path | Implements (capabilities) | Pinned | Status |
+| --- | --- | --- | --- | --- |
+| [livepeer-protocol-explorer](livepeer-protocol-explorer.md) | `modules/livepeer-protocol-explorer/` | Protocol Explorer (index + valuation + analytics + API + SPA) | `6dccd70` | 🟠 Onboarded — documented (v1 deployed) |
+| [livepeer-network-bot](livepeer-network-bot.md) | `modules/livepeer-network-bot/` | Network Bot (Discord payout/activity reporting) | `0f62e37` | 🟠 Onboarded — documented (v0.1.0) |
+
 **Cross-repo dependencies:**
 - **Three demand-side front doors** (pick one per deployment): non-custodial credit+handoff
   ([open-clearinghouse](livepeer-open-clearinghouse.md)) vs. operator-funded in-path
@@ -26,6 +33,10 @@ capabilities — see each repo doc for the mapping.
   fronts the transcode-runners.
 - **Live path:** `transcode-gateway` → broker → `transcode-runners` **live-runner**
   (`live-session-gateway-ingest@v0`, "Option B").
+- **Observability:** `livepeer-network-bot` polls the `livepeer-protocol-explorer` HTTP
+  API (typed client) — its sole upstream. The explorer reads the Livepeer Arbitrum One
+  contracts **directly** (not via the suite's daemons), observing the on-chain output of
+  the network side.
 
 ## Status legend
 

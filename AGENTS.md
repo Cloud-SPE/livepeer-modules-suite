@@ -47,6 +47,13 @@ One line each. Full specs in [`docs/product-specs/`](docs/product-specs/index.md
 | SDKs | Client/integration libraries spanning the suite | [sdks](docs/product-specs/sdks.md) |
 | Reference Apps | Example gateway apps showing how to build on the suite | [reference-apps](docs/product-specs/reference-apps.md) |
 
+### Observability & Reporting (off-network — tracks on-chain activity)
+
+| Capability | One-liner | Spec |
+| --- | --- | --- |
+| Protocol Explorer | Indexes + prices + serves Livepeer on-chain activity (API + web explorer) | [protocol-explorer](docs/product-specs/protocol-explorer.md) |
+| Network Bot | Reports payouts/activity to Discord by polling the explorer | [network-bot](docs/product-specs/network-bot.md) |
+
 ## Repositories (submodules)
 
 | Repo | Implements | Doc |
@@ -57,6 +64,8 @@ One line each. Full specs in [`docs/product-specs/`](docs/product-specs/index.md
 | livepeer-modules-transcode-runners | Runner backends: video (VOD transcode, ABR ladder, live RTMP→HLS). live-runner = `live-session-gateway-ingest@v0` ("Option B"). | [repos/livepeer-modules-transcode-runners](docs/repos/livepeer-modules-transcode-runners.md) |
 | livepeer-modules-transcode-gateway | Full in-path video Gateway (VOD ABR + live RTMP→HLS). Operator-funded; talks daemons directly. Distinct front door from the clearinghouse. | [repos/livepeer-modules-transcode-gateway](docs/repos/livepeer-modules-transcode-gateway.md) |
 | livepeer-modules-openai-gateway | Full in-path OpenAI-compatible AI Gateway ("change `base_url`"). TS/Fastify twin of transcode-gateway; fronts the openai-runners. | [repos/livepeer-modules-openai-gateway](docs/repos/livepeer-modules-openai-gateway.md) |
+| livepeer-protocol-explorer | **Observability.** Rust data platform: indexes/prices/serves Livepeer on-chain activity (API + SPA). Reads chain directly. | [repos/livepeer-protocol-explorer](docs/repos/livepeer-protocol-explorer.md) |
+| livepeer-network-bot | **Observability.** Discord bot reporting payouts/activity; polls the protocol-explorer API. | [repos/livepeer-network-bot](docs/repos/livepeer-network-bot.md) |
 
 The end-to-end picture (how a unit of work flows through these capabilities) is in
 [`ARCHITECTURE.md`](ARCHITECTURE.md).
@@ -105,13 +114,14 @@ docs/
 
 ## Status
 
-Six repos onboarded: **`livepeer-network-modules`** (supply-side core),
-**`livepeer-open-clearinghouse`** (Payment Clearinghouse), **`livepeer-modules-openai-runners`**
-+ **`livepeer-modules-transcode-runners`** (AI + video Runner backends), and two full
-gateways — **`livepeer-modules-openai-gateway`** (AI) and
-**`livepeer-modules-transcode-gateway`** (video). There are **three distinct demand-side
-front doors** (clearinghouse vs. the two operator-funded gateways) — alternatives, not
-layers. Most capabilities are now 🟠 Documented; a daydream gateway, vtuber runners, and
-Reference Apps await their own repos. Per-capability status is in
-[`docs/product-specs/index.md`](docs/product-specs/index.md); per-repo status in
-[`docs/repos/index.md`](docs/repos/index.md).
+Eight repos onboarded across two areas. **Network:** `livepeer-network-modules`
+(supply-side core), `livepeer-open-clearinghouse` (Payment Clearinghouse),
+`livepeer-modules-openai-runners` + `livepeer-modules-transcode-runners` (AI + video Runner
+backends), and two full gateways — `livepeer-modules-openai-gateway` (AI) and
+`livepeer-modules-transcode-gateway` (video); three distinct demand-side front doors
+(clearinghouse vs. the two operator-funded gateways), not layers. **Observability
+(off-network):** `livepeer-protocol-explorer` (on-chain data platform) and
+`livepeer-network-bot` (Discord reporting; polls the explorer). Most capabilities are now
+🟠 Documented; a daydream gateway, vtuber runners, and Reference Apps await their own repos.
+Status: [`docs/product-specs/index.md`](docs/product-specs/index.md) (capabilities),
+[`docs/repos/index.md`](docs/repos/index.md) (repos).

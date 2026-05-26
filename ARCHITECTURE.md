@@ -146,6 +146,30 @@ front doors** — non-custodial credit + handoff (clearinghouse) vs. two operato
 in-path gateways — not layers of one stack. A deployment picks one. See
 [Gateways](docs/product-specs/gateways.md).
 
+## Observability side (off-network)
+
+A separate axis from supply/demand: two repos **track on-chain activity** rather than
+providing or consuming network work.
+
+- [protocol-explorer](docs/repos/livepeer-protocol-explorer.md) — a Rust + Postgres data
+  platform that indexes every Livepeer event on Arbitrum One, prices monetary activity per
+  block (Uniswap V3 TWAP × Chainlink, deterministic replay), derives stake/profile/rollup
+  analytics, and serves a versioned HTTP API + web explorer. It reads the **same contracts
+  the network side writes to** (`BondingManager`, `TicketBroker`, `RoundsManager`,
+  `LivepeerToken`, Governor) — directly from chain, **not** via the suite's daemons. It is
+  the analytical mirror of the network's on-chain output.
+- [network-bot](docs/repos/livepeer-network-bot.md) — a Discord reporting bot whose **sole
+  upstream is the explorer's API** (typed client). It posts payout digests and
+  daily/weekly/monthly summaries, and (commands mode) offers per-user subscriptions + DM
+  alerts.
+
+```text
+network side  ──writes──▶  Livepeer contracts (Arbitrum One)  ──read──▶  protocol-explorer ──API──▶ network-bot ──▶ Discord
+(orchestrators/payment/                                                  (index + value +
+ gateways via on-chain                                                    analytics + SPA)
+ tickets/rewards/rounds)
+```
+
 ## Domains & boundaries
 
 Each module is its own repository (its own deploy/release unit) mounted under

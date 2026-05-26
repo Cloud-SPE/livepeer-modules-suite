@@ -18,7 +18,9 @@ modules/
 ├── livepeer-modules-openai-runners/    # AI runner backends (pinned 3ea3f17)
 ├── livepeer-modules-transcode-runners/ # video runner backends (pinned b33e32f)
 ├── livepeer-modules-transcode-gateway/ # full video gateway (pinned 4086880)
-└── livepeer-modules-openai-gateway/    # full OpenAI-compatible AI gateway (pinned 5afaf96)
+├── livepeer-modules-openai-gateway/    # full OpenAI-compatible AI gateway (pinned 5afaf96)
+├── livepeer-protocol-explorer/         # observability: on-chain data platform (pinned 6dccd70)
+└── livepeer-network-bot/               # observability: Discord reporting bot (pinned 0f62e37)
 ```
 
 - Docs: [`../docs/repos/`](../docs/repos/index.md) — one per repo
