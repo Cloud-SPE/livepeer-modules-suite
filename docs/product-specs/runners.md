@@ -1,7 +1,7 @@
 # Runners
 
-**Status:** 🟠 Documented — first concrete backends in [livepeer-modules-openai-runners](../repos/livepeer-modules-openai-runners.md) (`3ea3f17`); contracts in [livepeer-network-modules](../repos/livepeer-network-modules.md)
-**Submodule(s):** `modules/livepeer-modules-openai-runners/` (+ broker contract in network-modules)
+**Status:** 🟠 Documented — concrete backends in [openai-runners](../repos/livepeer-modules-openai-runners.md) (AI) and [transcode-runners](../repos/livepeer-modules-transcode-runners.md) (video); contracts in [network-modules](../repos/livepeer-network-modules.md)
+**Submodule(s):** `modules/livepeer-modules-openai-runners/`, `modules/livepeer-modules-transcode-runners/` (+ broker contract in network-modules)
 
 ## What this is
 
@@ -44,6 +44,21 @@ and [`RUNNER-INVARIANTS.md`](../../modules/livepeer-modules-openai-runners/RUNNE
 
 See the repo doc for the full table, model downloaders, and the smoke-test image.
 
+## Concrete runners (transcode-runners repo)
+
+Video execution tier (Go + FFmpeg; NVIDIA/Intel/AMD images; strict GPU mode by default):
+
+| Capability | Runner | Shape | Mode |
+| --- | --- | --- | --- |
+| `video-transcode` | transcode-runner | single-rendition VOD (submit→poll) | async HTTP job |
+| `video-transcode-abr` | abr-runner | multi-rendition ABR/HLS ladder (submit→poll) | async HTTP job |
+| `livepeer:transcode/live-rtmp-hls-abr` | live-runner | live RTMP-in → HLS-out session | `live-session-gateway-ingest@v0` |
+
+VOD runners report `video_seconds`; the **live-runner** emits `output_seconds` usage
+events to broker callbacks. The live path runs
+[clearinghouse](payment-clearinghouse.md) `sessions` → broker → live-runner ("Option B").
+See [the repo doc](../repos/livepeer-modules-transcode-runners.md) for the contract.
+
 ## Runner shapes (by interaction mode)
 
 | Mode | Runner shape |
@@ -66,5 +81,6 @@ See the repo doc for the full table, model downloaders, and the smoke-test image
 - [ ] **Capability naming:** runners use hyphen form (`openai-chat-completions`); broker
   host-config examples used colon form (`openai:chat-completions`). Confirm the exact
   end-to-end mapping carried by `Livepeer-Capability`.
-- [ ] **Video / vtuber runners** are sibling repos — onboard and document when provided.
-- [ ] openai-runners is v1.3.0 / grade C (not yet validated end-to-end on GPU).
+- [ ] **vtuber runners** remain a separate, not-yet-onboarded repo. (AI + video tiers done.)
+- [ ] openai-runners is v1.3.0 / grade C; transcode-runners' **live-runner is design-phase**
+  (Option B) — neither runner tier is validated end-to-end on GPU yet.

@@ -92,10 +92,18 @@ A firewalled `secure-orch` holds the cold key and signs manifests; the public
 `orch-coordinator` only scrapes and publishes; every resolver re-verifies the signature.
 Payment is probabilistic micropayment **tickets** settled via the on-chain `TicketBroker`.
 
-Concrete runners now exist: the
+Concrete runners now exist in two repos: the
 [openai-runners](docs/repos/livepeer-modules-openai-runners.md) repo ships
-OpenAI/Cohere-shaped AI backends (chat, embeddings, audio, TTS, image, rerank) that
-implement the broker↔runner HTTP contract and report work units back to the broker.
+OpenAI/Cohere-shaped AI backends (chat, embeddings, audio, TTS, image, rerank), and the
+[transcode-runners](docs/repos/livepeer-modules-transcode-runners.md) repo ships video
+backends (VOD transcode, ABR ladder, and a live RTMP→HLS runtime). Both implement the
+broker↔runner HTTP contract and report work units back to the broker.
+
+The **live path** is the suite's first fully cross-repo data flow:
+[clearinghouse](docs/repos/livepeer-open-clearinghouse.md) `sessions` (credit + open) →
+broker (session authority + payment) → transcode-runners **live-runner** (RTMP ingest +
+HLS, emitting `output_seconds` usage events back to the broker) — the
+`live-session-gateway-ingest@v0` mode ("Option B").
 
 See [`docs/repos/livepeer-network-modules.md`](docs/repos/livepeer-network-modules.md)
 for the component map and the [glossary](docs/glossary.md) for terms.

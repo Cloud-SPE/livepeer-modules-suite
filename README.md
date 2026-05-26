@@ -34,6 +34,9 @@ Payment Clearinghouse (+ SDKs) · Reference Apps. See
 - **[livepeer-modules-openai-runners](docs/repos/livepeer-modules-openai-runners.md)** —
   containerized AI Runner backends (chat, embeddings, audio, TTS, image, rerank) that sit
   behind the capability broker.
+- **[livepeer-modules-transcode-runners](docs/repos/livepeer-modules-transcode-runners.md)** —
+  video Runner backends (VOD transcode, ABR ladder, live RTMP→HLS) with NVIDIA/Intel/AMD
+  support.
 
 ## Getting the code
 

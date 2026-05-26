@@ -89,6 +89,37 @@ From [`livepeer-modules-openai-runners`](repos/livepeer-modules-openai-runners.m
   (speech-to-text), **Kokoro** (text-to-speech), **diffusers** (image generation:
   SDXL/RealVisXL/FLUX), **CrossEncoder** (reranking).
 
+## Video runner tier
+
+From [`livepeer-modules-transcode-runners`](repos/livepeer-modules-transcode-runners.md).
+
+- **VOD** — video-on-demand; the transcode/abr runners use an async **submit→poll**
+  pattern (`POST` returns `202` + `job_id`; status polled via `POST .../status`).
+- **ABR ladder** — adaptive-bitrate set of **renditions** (rungs) at different
+  resolutions/bitrates, packaged as **HLS** (master + variant playlists + segments).
+- **Rendition** — one output encoding in an ABR ladder (e.g. 720p), with its own
+  bitrate/resolution/playlist.
+- **RTMP ingest** — a publisher pushes a live stream (RTMP) into the live-runner on a
+  shared port; the runner produces HLS.
+- **Transcode preset** — named YAML config (codec, resolution, bitrate, profile, audio)
+  for a rendition or full ladder; operator-editable under `infra/presets/`.
+- **HDR→SDR tone mapping / subtitle burn-in / watermark overlay / thumbnail extraction** —
+  VOD filter-graph features (the last three need CPU-side frames, so they're rejected
+  under strict GPU mode).
+- **Strict GPU mode** — default fail-closed policy: jobs fail rather than fall back to
+  CPU; presets are filtered at startup against the usable decode+encode path.
+- **NVENC/NVDEC, QSV, VAAPI** — hardware encode/decode paths for NVIDIA, Intel, and AMD.
+- **transcode-core** — shared Go package: GPU detection, FFmpeg/ffprobe commands, preset
+  parsing, HLS generation, progress parsing, upload/download, filter graphs.
+- **gateway-ingest / `live-session-gateway-ingest@v0`** — the live-runner's mode: shared
+  RTMP ingest port owned by the runner; HLS pushed to caller storage.
+- **`output_credential`** — S3-compatible creds (endpoint/bucket/prefix/temp keys) the
+  broker passes to the live-runner for HLS upload.
+- **`private_ingest_url` / stream key** — the `rtmp://host:1935/live/{stream_key}` URL the
+  runner returns on session-create; the stream key is a bearer secret issued once.
+- **Option B** — the live topology `client → transcode-gateway → broker/payment →
+  live-runner`, where the broker owns session+payment authority and the runner owns media.
+
 ## Wire headers
 
 - **`Livepeer-Capability`** — opaque capability id on the request.
