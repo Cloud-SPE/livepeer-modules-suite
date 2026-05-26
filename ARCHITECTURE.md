@@ -99,11 +99,17 @@ OpenAI/Cohere-shaped AI backends (chat, embeddings, audio, TTS, image, rerank), 
 backends (VOD transcode, ABR ladder, and a live RTMP→HLS runtime). Both implement the
 broker↔runner HTTP contract and report work units back to the broker.
 
-The **live path** is the suite's first fully cross-repo data flow:
-[clearinghouse](docs/repos/livepeer-open-clearinghouse.md) `sessions` (credit + open) →
-broker (session authority + payment) → transcode-runners **live-runner** (RTMP ingest +
-HLS, emitting `output_seconds` usage events back to the broker) — the
-`live-session-gateway-ingest@v0` mode ("Option B").
+The **live path** is the suite's first fully cross-repo data flow, driven by the
+[transcode-gateway](docs/repos/livepeer-modules-transcode-gateway.md):
+
+> **transcode-gateway** (owns RTMP `:1935`, mints payment, relays frames) → broker
+> (session authority + payment) → transcode-runners **live-runner** (RTMP ingest + HLS,
+> emitting `output_seconds` usage events back to the broker)
+
+This is the `live-session-gateway-ingest@v0` mode (the transcode-runners repo calls the
+topology "Option B"). Note the [clearinghouse](docs/repos/livepeer-open-clearinghouse.md)
+independently supports the same session mode, but it is a **separate, non-custodial
+demand-side surface** — not part of this gateway's path.
 
 See [`docs/repos/livepeer-network-modules.md`](docs/repos/livepeer-network-modules.md)
 for the component map and the [glossary](docs/glossary.md) for terms.
@@ -125,11 +131,18 @@ It operates in **handoff mode** — it is the control plane, not the data plane:
 3. It returns the signed envelope; the **SDK talks to the orchestrator broker directly**
    and reports actual usage back for settle-time reconciliation.
 
-So the gateway role is split: **control plane** (auth, credit, discovery proxy, mint) in
-the clearinghouse; **data plane** (interaction-mode transport, `Livepeer-Payment`) in the
-SDK. The clearinghouse **consumes the supply-side daemons** (`payment-daemon`,
-`service-registry-daemon`) over Unix-socket gRPC — the first concrete cross-repo
-dependency in the suite.
+So in the clearinghouse model the gateway role is split: **control plane** (auth, credit,
+discovery proxy, mint) in the clearinghouse; **data plane** (interaction-mode transport,
+`Livepeer-Payment`) in the SDK. It **consumes the supply-side daemons** (`payment-daemon`,
+`service-registry-daemon`) over Unix-socket gRPC.
+
+**There is a second, distinct demand-side surface:** the
+[transcode-gateway](docs/repos/livepeer-modules-transcode-gateway.md) is a *full* gateway
+that talks to the same daemons directly but **pays the network itself** (customers pay
+nothing in v1) and stays **in the data path** (it owns the RTMP endpoint and relays
+frames). The two are alternative front doors — non-custodial credit + handoff
+(clearinghouse) vs. operator-funded in-path gateway (transcode-gateway) — not layers of
+one stack. See [Gateways](docs/product-specs/gateways.md).
 
 ## Domains & boundaries
 

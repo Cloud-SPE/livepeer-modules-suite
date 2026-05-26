@@ -1,50 +1,63 @@
 # Gateways
 
-**Status:** 🟡 Stub — contracts known, gateway repo awaited
-**Submodule:** _TBD — gateway shell/adapters were removed from `livepeer-network-modules`_
+**Status:** 🟠 Documented — full gateway in [livepeer-modules-transcode-gateway](../repos/livepeer-modules-transcode-gateway.md) (`4086880`); control-plane variant in [open-clearinghouse](../repos/livepeer-open-clearinghouse.md)
+**Submodule:** `modules/livepeer-modules-transcode-gateway/`
 
 ## What this is
 
 A **Gateway** is the demand-side entry point: it accepts work from applications or end
 users, **discovers** and selects an orchestrator, attaches **payment**, opens the right
-transport, and forwards traffic. Historically this role was the "Broadcaster."
+transport, and forwards traffic. It turns the Livepeer network into a usable application
+surface.
 
-The first repo ([livepeer-network-modules](../repos/livepeer-network-modules.md)) defines
-the **contracts a gateway talks to** but no longer contains a gateway shell — the named
-gateway products and `gateway-adapters` were removed from its working tree (2026-05-19).
+## Two demand-side patterns
 
-**The gateway role is split in practice.** The
-[Payment Clearinghouse](../repos/livepeer-open-clearinghouse.md) (the
-`livepeer-open-clearinghouse-gateway` service) owns the **control-plane half** — auth,
-credit, discovery proxy, and minting the payment envelope — while the **data-plane half**
-(talking the broker's interaction modes, sending `Livepeer-Payment`, reading work units)
-lives in the customer's [SDK](sdks.md). A standalone, full data-plane gateway shell may
-still arrive as its own repo.
+The suite currently has **two distinct, alternative front doors** (not layered):
 
-## What the contracts tell us a gateway does
+1. **Full in-path gateway** — [transcode-gateway](../repos/livepeer-modules-transcode-gateway.md):
+   one Go service that exposes a video API (VOD ABR + live RTMP→HLS), resolves routes via
+   `service-registry-daemon`, mints `Livepeer-Payment` via `payment-daemon`, and forwards
+   to the broker. The **gateway pays the network itself** (customers pay nothing in v1),
+   owns the public RTMP endpoint, and ships a thin SaaS shell (waitlist + API keys, no
+   billing) with three embedded UIs.
+2. **Non-custodial control plane + SDK** — [open-clearinghouse](payment-clearinghouse.md):
+   the clearinghouse handles auth/credit/discovery-proxy/mint and **hands off** a payment
+   envelope; the customer's [SDK](sdks.md) is the data plane that talks to the broker
+   directly.
 
-1. **Resolve** a route via [Discover](discover.md) → gets a tuple including
-   `interaction_mode`.
-2. **Pick the mode adapter** (reqresp / stream / multipart / ws / rtmp / session) — code
-   is **per-mode, not per-capability**.
-3. **Mint payment** via the [Payment](payment.md) sender daemon.
-4. **Wrap headers** — `Authorization` (customer bearer), `Livepeer-Payment` (ticket),
-   `Livepeer-Capability`, `Livepeer-Offering` — open transport, forward to the broker.
-5. Apply **local route-health cooldowns** on top of manifest + live health.
+A deployment chooses one. Both consume the same supply-side daemons.
 
-The only per-workload code is the customer-facing surface (e.g. OpenAI-shaped routes);
-everything beneath is capability-agnostic.
+## How a gateway works (transcode-gateway, grounded)
+
+- **Surface:** `/api/v1/abr*` (VOD ABR ladder), `/api/v1/live*` (RTMP→HLS),
+  `/api/v1/capabilities` (live registry catalog).
+- **Wire translation:** request → `Livepeer-Capability` + interaction mode
+  (`http-reqresp@v0` for VOD, `live-session-gateway-ingest@v0` for live).
+- **Route selection:** `routeSelector` ranks `SelectMany` candidates by
+  constraints/extras/price; `routeHealth` cools down failing routes (2 fails → 30s) and
+  fails over. (This is [Discover](discover.md) on the gateway side.)
+- **Payment:** per-request envelope for VOD; session-open + interim-debit for live.
+- **Usage:** durable reservations (open → committed / refunded); MinIO/S3 for assets with
+  per-session STS-scoped creds.
+
+For live, the gateway is the one named in the "Option B" topology:
+**transcode-gateway → broker → [live-runner](runners.md)**.
 
 ## Role in the suite
 
 - **Consumes:** [Discover](discover.md), [Service Registry](service-registry.md),
-  [Payment](payment.md) (sender).
-- **Talks to:** [Orchestrators](orchestrators.md) / [Pools](pools.md) brokers.
-- **Consumed by:** [Reference Apps](reference-apps.md) and external apps, via [SDKs](sdks.md).
+  [Payment](payment.md).
+- **Forwards to:** [Orchestrators](orchestrators.md) / [Pools](pools.md) brokers and
+  [Runners](runners.md).
+- **Consumed by:** end users / [Reference Apps](reference-apps.md), and (clearinghouse
+  pattern) via [SDKs](sdks.md).
 
-## To document when a gateway repo is provided
+## Confirmed / open
 
-- [ ] Which gateway shells exist and their customer-facing surfaces
-- [ ] How adapters per interaction mode are implemented
-- [ ] Auth/customer model and how it ties to [customer-portal](sdks.md)
-- [ ] Deployment, config, pinned revision
+- ✅ A full standalone gateway exists (video). It pays the network; no customer billing in v1.
+- ✅ Live = `live-session-gateway-ingest@v0`; gateway owns RTMP `:1935` and relays frames.
+- [ ] An **OpenAI/daydream gateway** sibling (transcode-gateway was ported from it) is a
+  likely future repo.
+- [ ] transcode-gateway is v1.3.0 / grade C, **tests grade F** — not yet run against a
+  real broker.
+- [ ] Capability-name mismatch with the runner manifests (TD-7).

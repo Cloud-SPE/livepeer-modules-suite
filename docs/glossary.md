@@ -236,6 +236,34 @@ From [`livepeer-open-clearinghouse`](repos/livepeer-open-clearinghouse.md).
 - **Operator approval** — operator gate that activates a new user account (with an initial
   credit grant and caps).
 
+## Gateway tier (demand-side front door)
+
+From [`livepeer-modules-transcode-gateway`](repos/livepeer-modules-transcode-gateway.md).
+Note: this is a *full in-path gateway*, distinct from the non-custodial
+[clearinghouse](repos/livepeer-open-clearinghouse.md) front door.
+
+- **Gateway (full / in-path)** — a service that exposes a customer API, resolves a route,
+  mints payment, and forwards/relays work to the broker; the **operator funds payment**
+  (customers pay nothing in v1).
+- **Route selector** — gateway component that calls the resolver's `SelectMany` and ranks
+  candidate brokers by constraints / extras / price.
+- **Route health / cooldown** — per-candidate failure tracker; N consecutive failures
+  open a cooldown window during which the route is skipped (gateway-side of selection).
+- **Usage reservation** — a durable per-request/session row (`open → committed / refunded`)
+  recording the work_id, capability, estimated vs committed units, price, and outcome.
+- **Presigned upload URL** — a time-limited S3 (MinIO) PUT URL so clients upload input
+  directly; the gateway never touches input bytes.
+- **Master playlist** — the HLS `master.m3u8` listing ABR renditions; its appearance in
+  object storage signals VOD completion.
+- **STS AssumeRole** — minting temporary, narrowly-scoped S3 credentials per live session
+  for the runner's HLS output.
+- **RTMP relay** — the gateway accepts customer RTMP on a shared port, validates the
+  stream key, and relays frames to the broker's `private_ingest_url`.
+- **Waitlist / `ADMIN_TOKEN`** — the thin SaaS shell: signup→verify→admin-approve→API-key;
+  admin access is bootstrapped by an env token (no admin user table in v1).
+- **Zero-build SPA** — a Lit app using CDN ESM imports with no bundler, embedded into the
+  Go binary via `//go:embed`.
+
 ## Protocol & platform
 
 - **livepeer-network-protocol** — the spec repo (modes, extractors, manifest schema,

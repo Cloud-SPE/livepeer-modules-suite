@@ -10,3 +10,6 @@
 [submodule "modules/livepeer-modules-transcode-runners"]
 	path = modules/livepeer-modules-transcode-runners
 	url = git@github.com:Cloud-SPE/livepeer-modules-transcode-runners.git
+[submodule "modules/livepeer-modules-transcode-gateway"]
+	path = modules/livepeer-modules-transcode-gateway
+	url = git@github.com:Cloud-SPE/livepeer-modules-transcode-gateway.git

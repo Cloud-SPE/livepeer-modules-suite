@@ -51,10 +51,12 @@ tracked: `gateway_session_id`, `broker_session_id`, `runner_session_id`, `work_i
   idempotency. **This is how live work is metered.**
 - **Terminate** (`DELETE …`) with an optional `reason` (e.g. `insufficient_balance`).
 
-This connects directly to the [clearinghouse](livepeer-open-clearinghouse.md) `sessions`
-domain, which already names `live-session-gateway-ingest@v0` as a supported mode. The full
-live path is **clearinghouse (credit + session) → broker (authority + payment) →
-live-runner (media)**. See
+The gateway in this topology is the
+[transcode-gateway](livepeer-modules-transcode-gateway.md) (it owns the RTMP endpoint and
+mints payment). The full live path is **transcode-gateway → broker (authority + payment) →
+live-runner (media)**. The [clearinghouse](livepeer-open-clearinghouse.md) also understands
+`live-session-gateway-ingest@v0`, but it is a separate non-custodial surface, not this
+path. See
 [`LIVE-OPTION-B-INTERFACE-SPEC.md`](../../modules/livepeer-modules-transcode-runners/LIVE-OPTION-B-INTERFACE-SPEC.md).
 
 ## transcode-core (shared)

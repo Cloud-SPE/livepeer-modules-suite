@@ -37,6 +37,9 @@ Payment Clearinghouse (+ SDKs) · Reference Apps. See
 - **[livepeer-modules-transcode-runners](docs/repos/livepeer-modules-transcode-runners.md)** —
   video Runner backends (VOD transcode, ABR ladder, live RTMP→HLS) with NVIDIA/Intel/AMD
   support.
+- **[livepeer-modules-transcode-gateway](docs/repos/livepeer-modules-transcode-gateway.md)** —
+  a full in-path video Gateway (VOD ABR + live RTMP→HLS) with a thin SaaS shell; a distinct
+  demand-side front door from the clearinghouse.
 
 ## Getting the code
 

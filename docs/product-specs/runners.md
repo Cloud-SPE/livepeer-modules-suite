@@ -56,8 +56,9 @@ Video execution tier (Go + FFmpeg; NVIDIA/Intel/AMD images; strict GPU mode by d
 
 VOD runners report `video_seconds`; the **live-runner** emits `output_seconds` usage
 events to broker callbacks. The live path runs
-[clearinghouse](payment-clearinghouse.md) `sessions` → broker → live-runner ("Option B").
-See [the repo doc](../repos/livepeer-modules-transcode-runners.md) for the contract.
+[transcode-gateway](../repos/livepeer-modules-transcode-gateway.md) → broker → live-runner
+("Option B"). See [the repo doc](../repos/livepeer-modules-transcode-runners.md) for the
+contract.
 
 ## Runner shapes (by interaction mode)
 

@@ -11,16 +11,18 @@ capabilities — see each repo doc for the mapping.
 | [livepeer-open-clearinghouse](livepeer-open-clearinghouse.md) | `modules/livepeer-open-clearinghouse/` | Payment Clearinghouse, Payment (issuance), SDKs, Discover (proxy), Gateways (control-plane half) | `a529592` | 🟠 Onboarded — documented |
 | [livepeer-modules-openai-runners](livepeer-modules-openai-runners.md) | `modules/livepeer-modules-openai-runners/` | Runners (OpenAI/Cohere-shaped AI backends) | `3ea3f17` | 🟠 Onboarded — documented (v1.3.0, grade C) |
 | [livepeer-modules-transcode-runners](livepeer-modules-transcode-runners.md) | `modules/livepeer-modules-transcode-runners/` | Runners (video: VOD transcode, ABR ladder, live) | `b33e32f` | 🟠 Onboarded — documented (live-runner in design) |
+| [livepeer-modules-transcode-gateway](livepeer-modules-transcode-gateway.md) | `modules/livepeer-modules-transcode-gateway/` | Gateways (full in-path video gateway), Discover, Payment | `4086880` | 🟠 Onboarded — documented (v1.3.0, grade C / tests F) |
 
 **Cross-repo dependencies:**
-- `livepeer-open-clearinghouse` consumes `payment-daemon` and `service-registry-daemon`
-  from `livepeer-network-modules` over Unix-socket gRPC.
-- `livepeer-modules-openai-runners` sit **behind** the `capability-broker` in
-  `livepeer-network-modules` (broker = client, runner = HTTP server; see its
-  `BROKER-CONTRACT.md`).
-- `livepeer-modules-transcode-runners` sit behind the same broker; its **live-runner**
-  implements `live-session-gateway-ingest@v0` — the live path runs clearinghouse `sessions`
-  → broker → live-runner ("Option B").
+- `livepeer-open-clearinghouse` and `livepeer-modules-transcode-gateway` are **two
+  distinct demand-side front doors** (non-custodial credit+handoff vs. operator-funded
+  in-path gateway). Both consume `payment-daemon` + `service-registry-daemon` from
+  `livepeer-network-modules` over Unix-socket gRPC.
+- `livepeer-modules-openai-runners` and `livepeer-modules-transcode-runners` sit **behind**
+  the `capability-broker` in `livepeer-network-modules` (broker = client, runner = HTTP
+  server; see their `BROKER-CONTRACT.md` / interface specs).
+- **Live path:** `transcode-gateway` → broker → `transcode-runners` **live-runner**
+  (`live-session-gateway-ingest@v0`, "Option B").
 
 ## Status legend
 

@@ -55,6 +55,7 @@ One line each. Full specs in [`docs/product-specs/`](docs/product-specs/index.md
 | livepeer-open-clearinghouse | Demand-side control plane: Payment Clearinghouse, Payment issuance, SDKs, Discover proxy, gateway control-plane half. Consumes network-modules daemons. | [repos/livepeer-open-clearinghouse](docs/repos/livepeer-open-clearinghouse.md) |
 | livepeer-modules-openai-runners | Runner backends: OpenAI/Cohere-shaped AI services (chat, embeddings, audio, TTS, image, rerank) that sit behind the capability broker. | [repos/livepeer-modules-openai-runners](docs/repos/livepeer-modules-openai-runners.md) |
 | livepeer-modules-transcode-runners | Runner backends: video (VOD transcode, ABR ladder, live RTMP→HLS). live-runner = `live-session-gateway-ingest@v0` ("Option B"). | [repos/livepeer-modules-transcode-runners](docs/repos/livepeer-modules-transcode-runners.md) |
+| livepeer-modules-transcode-gateway | Full in-path video Gateway (VOD ABR + live RTMP→HLS). Operator-funded; talks daemons directly. Distinct front door from the clearinghouse. | [repos/livepeer-modules-transcode-gateway](docs/repos/livepeer-modules-transcode-gateway.md) |
 
 The end-to-end picture (how a unit of work flows through these capabilities) is in
 [`ARCHITECTURE.md`](ARCHITECTURE.md).
@@ -103,11 +104,12 @@ docs/
 
 ## Status
 
-Four repos onboarded: **`livepeer-network-modules`** (supply-side core),
+Five repos onboarded: **`livepeer-network-modules`** (supply-side core),
 **`livepeer-open-clearinghouse`** (demand-side Payment Clearinghouse),
-**`livepeer-modules-openai-runners`** (AI Runner backends), and
-**`livepeer-modules-transcode-runners`** (video Runner backends incl. live "Option B").
-Most capabilities are now 🟠 Documented; a standalone full gateway shell, vtuber runners,
-and Reference Apps await their own repos. Per-capability status is in
-[`docs/product-specs/index.md`](docs/product-specs/index.md); per-repo status in
+**`livepeer-modules-openai-runners`** + **`livepeer-modules-transcode-runners`** (AI +
+video Runner backends), and **`livepeer-modules-transcode-gateway`** (full in-path video
+Gateway). The two demand-side front doors (clearinghouse vs. transcode-gateway) are
+**distinct, not layered**. Most capabilities are now 🟠 Documented; an OpenAI/daydream
+gateway, vtuber runners, and Reference Apps await their own repos. Per-capability status
+is in [`docs/product-specs/index.md`](docs/product-specs/index.md); per-repo status in
 [`docs/repos/index.md`](docs/repos/index.md).
