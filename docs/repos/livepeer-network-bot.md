@@ -2,7 +2,7 @@
 
 **Submodule:** `modules/livepeer-network-bot/`
 **Origin:** `git@github.com:Cloud-SPE/livepeer-network-bot.git`
-**Pinned revision:** `0f62e37` (documented 2026-05-26)
+**Pinned revision:** `1c81f00` (documented 2026-06-11)
 **Status:** 🟠 Onboarded — documented from code. Crate `livepeer-payout-bot` v0.1.0;
 opinionated about reliability over breadth.
 
@@ -40,19 +40,21 @@ persisted; rows are marked sent only after a 2xx delivery).
 Adds a Discord gateway bot (poise/serenity) with slash commands `/subscribe`,
 `/unsubscribe`, `/subscriptions`, `/orchestrator {delegators,rewards,tickets}`; per-user
 orchestrator **subscriptions** (capped, `MAX_SUBSCRIPTIONS_PER_USER`); **DM** alerts for
-reward events; periodic **delegator-activity digest** DMs (bonds/unbonds/rebonds/stake
-increases); and startup **seeding** of `delegator_history` so new-vs-existing delegators
-are classified correctly from the start. DM failures increment a counter and
-auto-unsubscribe at a threshold.
+reward events and orchestrator cut changes; periodic **delegator-activity digest** DMs
+(bonds/unbonds/rebonds/stake increases); and startup **seeding** of `delegator_history` so
+new-vs-existing delegators are classified correctly from the start. DM failures increment a
+counter and auto-unsubscribe at a threshold.
 
 ## Config / deployment modes
 
 Strict env validation at startup (`src/config.rs`, `.env.example`):
 
-- Always: `EXPLORER_BASE_URL`, `DISCORD_WEBHOOK_URL`, `DATABASE_URL`.
+- Always: `EXPLORER_BASE_URL`, `DISCORD_WEBHOOK_URL`, `DATABASE_URL`. `DISCORD_WEBHOOK_URL`
+  accepts one webhook or several comma-separated webhooks for multi-server fanout.
 - Commands mode also: `DISCORD_BOT_TOKEN`, `DISCORD_APPLICATION_ID`, optional
   `DISCORD_GUILD_ID`, `MAX_SUBSCRIPTIONS_PER_USER`, `DM_FAILURE_AUTO_UNSUB`.
-- Tunables: poll intervals, digest window, fetch limits, `WEBHOOK_POST_ENABLED`.
+- Tunables: poll intervals, digest window, fetch limits, cut-change polling,
+  `WEBHOOK_POST_ENABLED`.
 
 ## Message contract
 

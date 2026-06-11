@@ -2,7 +2,7 @@
 
 **Submodule:** `modules/livepeer-protocol-explorer/`
 **Origin:** `git@github.com:Cloud-SPE/livepeer-protocol-explorer.git`
-**Pinned revision:** `6dccd70` (documented 2026-05-26)
+**Pinned revision:** `88f0ff8` (documented 2026-06-11)
 **Status:** 🟠 Onboarded — documented from code. Spec v1.9; v1 complete and operationally
 deployed (a few backfill/throughput items open in its own tech-debt tracker).
 
@@ -50,7 +50,7 @@ ETH-valued (WinningTicketRedeemed, Deposit/Reserve funded, Withdrawal, EarningsC
 - **Derived:** `stake_balances_by_block`, `orch_stake_by_round`, gateway balances/flows,
   `orchestrator_profile` / `broadcaster_profile` (materialized views), `delegator_registry`.
 - **Rollups:** `orch_payouts_daily`, `orch_rewards_daily`, `tickets_daily`,
-  `event_metrics_daily`.
+  `event_metrics_daily`, and current staker/delegation state.
 - **API (`/api/v1/*`):** events + valuations, price lookups, payout/reward summaries +
   leaderboards, ticket timeseries, governance proposals/votes, gateway analytics,
   orchestrator profiles/economics, delegator/stake history, round views, network stats,
@@ -84,7 +84,8 @@ suite's `service-registry-daemon`/`payment-daemon`.)
 ## Stack & status
 
 Rust 1.94 workspace (Tokio, Alloy, sqlx/Postgres 17, Axum, utoipa); deterministic-replay
-CI. v1 deployed; open items in its own
+CI. v1 deployed; latest pin includes delegation-state correctness fixes and safer null
+USD amount decoding in report/payout APIs; open items in its own
 [`docs/exec-plans/tech-debt-tracker.md`](../../modules/livepeer-protocol-explorer/docs/exec-plans/tech-debt-tracker.md)
 (e.g. LPT on-chain backfill throughput TD-011, finality heuristic TD-008).
 

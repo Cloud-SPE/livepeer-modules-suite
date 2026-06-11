@@ -1,7 +1,7 @@
 # Pools
 
-**Status:** 🟠 Documented via [livepeer-network-modules](../repos/livepeer-network-modules.md) (`95c6415`)
-**Submodule:** `modules/livepeer-network-modules/` (`pool-controller`, `pool-reconciler`, `pool-payout-executor`)
+**Status:** 🟠 Documented via [livepeer-network-modules](../repos/livepeer-network-modules.md) (`6406a6d`)
+**Submodule:** `modules/livepeer-network-modules/` (`pool-controller`, `pool-member-agent`, `pool-reconciler`, `pool-payout-executor`)
 
 ## What this is — open question resolved
 
@@ -20,6 +20,10 @@ payment-daemon without any pool component.
   backend↔offer assignments), renders the broker's runtime config from that state,
   ingests work receipts, and runs **backend-selection scoring** (cooldown, EMA, latency,
   warm-up) to decide routing.
+- **`pool-member-agent`** — runs on connected member hosts. It reports hardware inventory,
+  keeps an outbound worker session open to the broker, prefers QUIC when available, and
+  falls back to WebSocket for UDP-blocked networks. Members do not need inbound broker,
+  payment-daemon, TLS, DNS, or wallet infrastructure.
 - **`pool-reconciler`** — closes rounds using `protocol-daemon` round timing,
   `payment-daemon` realized revenue, and `pool-controller` work receipts; emits the
   round-close payload.
@@ -43,4 +47,6 @@ with auto-requeue on transient failure).
 
 - ✅ Pool = capacity aggregation + round accounting + ETH member payouts (not staking).
 - ✅ Gateway sees one orch identity; pool internals are invisible externally.
-- [ ] Member admission/join-request UX details (in `pool-controller`) — expand if needed.
+- ✅ Member admission/join-request UX, connected-pool session state, broker runtime
+  rendering, and member hardware reporting are implemented in `pool-controller` plus
+  `pool-member-agent`.

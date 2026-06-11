@@ -1,7 +1,7 @@
 # Network Bot (Discord Reporting)
 
 **Group:** Observability & Reporting (off-network)
-**Status:** 🟠 Documented via [livepeer-network-bot](../repos/livepeer-network-bot.md) (`0f62e37`)
+**Status:** 🟠 Documented via [livepeer-network-bot](../repos/livepeer-network-bot.md) (`1c81f00`)
 **Submodule:** `modules/livepeer-network-bot/`
 
 ## What this is
@@ -19,7 +19,10 @@ per-user orchestrator subscriptions and DM alerts.
   durable cursor + delivery tracking so it resumes safely across restarts.
 - **Commands mode** (`COMMANDS_ENABLED=true`): slash commands (`/subscribe`,
   `/unsubscribe`, `/subscriptions`, `/orchestrator …`), capped per-user subscriptions, DM
-  reward alerts, periodic delegator-activity digests, and startup seeding.
+  reward alerts, orchestrator cut-change alerts, periodic delegator-activity digests, and
+  startup seeding.
+- **Webhook fanout:** `DISCORD_WEBHOOK_URL` can hold multiple comma-separated webhooks,
+  allowing the same public digest/summary posts to fan out to several Discord servers.
 
 Message formatting is a snapshot-tested contract (`messages.md`).
 
@@ -30,6 +33,7 @@ Message formatting is a snapshot-tested contract (`messages.md`).
 
 ## Confirmed / open
 
-- ✅ Single binary / single SQLite / single explorer API / single Discord surface.
+- ✅ Single binary / single SQLite / single explorer API / Discord webhook fanout plus
+  optional bot DMs.
 - ✅ Typed explorer client (no raw JSON); deterministic delivery semantics.
 - [ ] v0.1.0; reliability-first scope (intentionally narrow feature set).

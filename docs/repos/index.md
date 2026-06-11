@@ -7,19 +7,19 @@ capabilities — see each repo doc for the mapping.
 
 | Repo | Path | Implements (capabilities) | Pinned | Status |
 | --- | --- | --- | --- | --- |
-| [livepeer-network-modules](livepeer-network-modules.md) | `modules/livepeer-network-modules/` | Orchestrators, Runners, Pools, Payment, Service Registry, Discover, Protocol, SDKs (customer-portal) | `95c6415` | 🟠 Onboarded — documented |
-| [livepeer-open-clearinghouse](livepeer-open-clearinghouse.md) | `modules/livepeer-open-clearinghouse/` | Payment Clearinghouse, Payment (issuance), SDKs, Discover (proxy), Gateways (control-plane half) | `a529592` | 🟠 Onboarded — documented |
+| [livepeer-network-modules](livepeer-network-modules.md) | `modules/livepeer-network-modules/` | Orchestrators, Runners, Pools, Payment, Service Registry, Discover, Protocol, SDKs (customer-portal) | `6406a6d` | 🟠 Onboarded — documented |
+| [livepeer-open-clearinghouse](livepeer-open-clearinghouse.md) | `modules/livepeer-open-clearinghouse/` | Payment Clearinghouse, Payment (issuance), SDKs, Discover (proxy), Gateways (control-plane half) | `98b23ab` | 🟠 Onboarded — documented |
 | [livepeer-modules-openai-runners](livepeer-modules-openai-runners.md) | `modules/livepeer-modules-openai-runners/` | Runners (OpenAI/Cohere-shaped AI backends) | `3ea3f17` | 🟠 Onboarded — documented (v1.3.0, grade C) |
 | [livepeer-modules-transcode-runners](livepeer-modules-transcode-runners.md) | `modules/livepeer-modules-transcode-runners/` | Runners (video: VOD transcode, ABR ladder, live) | `b33e32f` | 🟠 Onboarded — documented (live-runner in design) |
-| [livepeer-modules-transcode-gateway](livepeer-modules-transcode-gateway.md) | `modules/livepeer-modules-transcode-gateway/` | Gateways (full in-path video gateway), Discover, Payment | `4086880` | 🟠 Onboarded — documented (v1.3.0, grade C / tests F) |
-| [livepeer-modules-openai-gateway](livepeer-modules-openai-gateway.md) | `modules/livepeer-modules-openai-gateway/` | Gateways (OpenAI-compatible AI gateway), SDKs (wire-compat), Discover, Payment | `5afaf96` | 🟠 Onboarded — documented (v1.3.1+, grade C, 45 tests) |
+| [livepeer-modules-transcode-gateway](livepeer-modules-transcode-gateway.md) | `modules/livepeer-modules-transcode-gateway/` | Gateways (full in-path video gateway), LOC-mediated Discover + Payment | `2a3cbfa` | 🟠 Onboarded — documented (LOC integration) |
+| [livepeer-modules-openai-gateway](livepeer-modules-openai-gateway.md) | `modules/livepeer-modules-openai-gateway/` | Gateways (OpenAI-compatible AI gateway), SDKs (wire-compat), LOC-mediated Discover + Payment | `baf214a` | 🟠 Onboarded — documented (LOC integration) |
 
 ### Observability & Reporting (off-network — tracking, not supply/demand)
 
 | Repo | Path | Implements (capabilities) | Pinned | Status |
 | --- | --- | --- | --- | --- |
-| [livepeer-protocol-explorer](livepeer-protocol-explorer.md) | `modules/livepeer-protocol-explorer/` | Protocol Explorer (index + valuation + analytics + API + SPA) | `6dccd70` | 🟠 Onboarded — documented (v1 deployed) |
-| [livepeer-network-bot](livepeer-network-bot.md) | `modules/livepeer-network-bot/` | Network Bot (Discord payout/activity reporting) | `0f62e37` | 🟠 Onboarded — documented (v0.1.0) |
+| [livepeer-protocol-explorer](livepeer-protocol-explorer.md) | `modules/livepeer-protocol-explorer/` | Protocol Explorer (index + valuation + analytics + API + SPA) | `88f0ff8` | 🟠 Onboarded — documented (v1 deployed) |
+| [livepeer-network-bot](livepeer-network-bot.md) | `modules/livepeer-network-bot/` | Network Bot (Discord payout/activity reporting) | `1c81f00` | 🟠 Onboarded — documented (cut alerts + webhook fanout) |
 
 **Cross-repo dependencies:**
 - **Three demand-side front doors** (pick one per deployment): non-custodial credit+handoff

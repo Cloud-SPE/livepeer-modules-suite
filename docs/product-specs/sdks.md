@@ -1,6 +1,6 @@
 # SDKs
 
-**Status:** 🟠 Documented via [livepeer-open-clearinghouse](../repos/livepeer-open-clearinghouse.md) (`a529592`) + customer-portal in [livepeer-network-modules](../repos/livepeer-network-modules.md)
+**Status:** 🟠 Documented via [livepeer-open-clearinghouse](../repos/livepeer-open-clearinghouse.md) (`98b23ab`) + customer-portal in [livepeer-network-modules](../repos/livepeer-network-modules.md)
 **Submodule(s):** `modules/livepeer-open-clearinghouse/`, `modules/livepeer-network-modules/customer-portal/`
 
 ## What this is
@@ -14,8 +14,11 @@ reports usage back for settlement.
 ## What exists today
 
 - **Reference SDKs** — in the clearinghouse repo's
-  [`examples/`](../../modules/livepeer-open-clearinghouse/examples/): `python`,
-  `typescript`, `go`, `rust`, plus a published `openapi.json`.
+  [`sdks/`](../../modules/livepeer-open-clearinghouse/sdks/): `python`, `typescript`,
+  `go`, `rust`, plus root [`openapi.json`](../../modules/livepeer-open-clearinghouse/openapi.json).
+- **Runnable examples** — under
+  [`examples/`](../../modules/livepeer-open-clearinghouse/examples/), split by language
+  and flow: `one-shot-job`, `streaming-http`, and `streaming-ws`.
 - **SDK governance** — the clearinghouse admin domain runs an **SDK approval registry**
   (keyed on `(lang, version, git_sha7)`) and publishes a **signed SDK manifest**
   (`GET /v1/sdk/manifest`, EdDSA) that SDKs check at startup (advisory in v1). SDKs
@@ -34,7 +37,8 @@ reports usage back for settlement.
 
 | SDK | Language(s) | Wraps | Where | Status |
 | --- | --- | --- | --- | --- |
-| Reference SDKs | Python, TypeScript, Go, Rust | Clearinghouse HTTP API + broker handoff | `livepeer-open-clearinghouse/examples/` | 🟠 Reference (lint + coverage gated) |
+| Reference SDKs | Python, TypeScript, Go, Rust | Clearinghouse HTTP API + broker handoff | `livepeer-open-clearinghouse/sdks/` | 🟠 Reference packages (lint + coverage gated) |
+| SDK examples | Python, TypeScript, Go, Rust | One-shot jobs + streaming HTTP/WebSocket flows | `livepeer-open-clearinghouse/examples/` | 🟠 Runnable examples |
 | customer-portal | TypeScript | SaaS shell: API keys, ledger, Stripe, admin UI | `livepeer-network-modules/customer-portal/` | 🟠 Shipped (library) |
 
 ## Role in the suite
@@ -45,6 +49,6 @@ reports usage back for settlement.
 
 ## To document as SDKs mature
 
-- [ ] Are the `examples/` SDKs published to package registries (PyPI/npm/Go/crates) or
-  example-only? Confirm and add install coords.
+- [ ] Publication state for `sdks/*` package registries (PyPI/npm/Go/crates); local/git
+  consumption instructions are documented in the clearinghouse repo.
 - [ ] Per-SDK quickstart and compatibility matrix vs the clearinghouse API version.

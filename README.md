@@ -38,11 +38,11 @@ Payment Clearinghouse (+ SDKs) · Reference Apps. See
   video Runner backends (VOD transcode, ABR ladder, live RTMP→HLS) with NVIDIA/Intel/AMD
   support.
 - **[livepeer-modules-transcode-gateway](docs/repos/livepeer-modules-transcode-gateway.md)** —
-  a full in-path video Gateway (VOD ABR + live RTMP→HLS) with a thin SaaS shell; a distinct
-  demand-side front door from the clearinghouse.
+  a full in-path video Gateway (VOD ABR + live RTMP→HLS) with a thin SaaS shell; route
+  selection/payment flow through LOC.
 - **[livepeer-modules-openai-gateway](docs/repos/livepeer-modules-openai-gateway.md)** —
-  a full in-path OpenAI-compatible AI Gateway ("change `base_url`"); the AI twin of the
-  transcode-gateway, fronting the openai-runners.
+  a full in-path OpenAI-compatible AI Gateway ("change `base_url`"); the LOC-mediated AI
+  twin of the transcode-gateway, fronting the openai-runners.
 
 **Observability & Reporting** (off-network — tracks on-chain activity):
 
@@ -68,6 +68,6 @@ for the inspiration): a short map (`AGENTS.md`) points into a structured `docs/`
 directory, and every claim is meant to be verifiable in-repo. Operating principles are
 in [`docs/design-docs/core-beliefs.md`](docs/design-docs/core-beliefs.md).
 
-> **Status:** first repo onboarded. Structure and workflow are in place and the
-> supply-side capabilities are documented from `livepeer-network-modules`; Gateways,
-> Runners, and Reference Apps await their own repos.
+> **Status:** eight repos onboarded. Network supply, clearinghouse, AI/video runners,
+> AI/video gateways, and off-network observability are documented from pinned submodules;
+> daydream gateway, vtuber runners, and Reference Apps still await their own repos.

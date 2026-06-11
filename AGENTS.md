@@ -62,8 +62,8 @@ One line each. Full specs in [`docs/product-specs/`](docs/product-specs/index.md
 | livepeer-open-clearinghouse | Demand-side control plane: Payment Clearinghouse, Payment issuance, SDKs, Discover proxy, gateway control-plane half. Consumes network-modules daemons. | [repos/livepeer-open-clearinghouse](docs/repos/livepeer-open-clearinghouse.md) |
 | livepeer-modules-openai-runners | Runner backends: OpenAI/Cohere-shaped AI services (chat, embeddings, audio, TTS, image, rerank) that sit behind the capability broker. | [repos/livepeer-modules-openai-runners](docs/repos/livepeer-modules-openai-runners.md) |
 | livepeer-modules-transcode-runners | Runner backends: video (VOD transcode, ABR ladder, live RTMP→HLS). live-runner = `live-session-gateway-ingest@v0` ("Option B"). | [repos/livepeer-modules-transcode-runners](docs/repos/livepeer-modules-transcode-runners.md) |
-| livepeer-modules-transcode-gateway | Full in-path video Gateway (VOD ABR + live RTMP→HLS). Operator-funded; talks daemons directly. Distinct front door from the clearinghouse. | [repos/livepeer-modules-transcode-gateway](docs/repos/livepeer-modules-transcode-gateway.md) |
-| livepeer-modules-openai-gateway | Full in-path OpenAI-compatible AI Gateway ("change `base_url`"). TS/Fastify twin of transcode-gateway; fronts the openai-runners. | [repos/livepeer-modules-openai-gateway](docs/repos/livepeer-modules-openai-gateway.md) |
+| livepeer-modules-transcode-gateway | Full in-path video Gateway (VOD ABR + live RTMP→HLS). Operator-funded via LOC; no local payer/resolver daemons. | [repos/livepeer-modules-transcode-gateway](docs/repos/livepeer-modules-transcode-gateway.md) |
+| livepeer-modules-openai-gateway | Full in-path OpenAI-compatible AI Gateway ("change `base_url`"). TS/Fastify LOC-mediated twin of transcode-gateway; fronts the openai-runners. | [repos/livepeer-modules-openai-gateway](docs/repos/livepeer-modules-openai-gateway.md) |
 | livepeer-protocol-explorer | **Observability.** Rust data platform: indexes/prices/serves Livepeer on-chain activity (API + SPA). Reads chain directly. | [repos/livepeer-protocol-explorer](docs/repos/livepeer-protocol-explorer.md) |
 | livepeer-network-bot | **Observability.** Discord bot reporting payouts/activity; polls the protocol-explorer API. | [repos/livepeer-network-bot](docs/repos/livepeer-network-bot.md) |
 
@@ -117,9 +117,10 @@ docs/
 Eight repos onboarded across two areas. **Network:** `livepeer-network-modules`
 (supply-side core), `livepeer-open-clearinghouse` (Payment Clearinghouse),
 `livepeer-modules-openai-runners` + `livepeer-modules-transcode-runners` (AI + video Runner
-backends), and two full gateways — `livepeer-modules-openai-gateway` (AI) and
-`livepeer-modules-transcode-gateway` (video); three distinct demand-side front doors
-(clearinghouse vs. the two operator-funded gateways), not layers. **Observability
+backends), and two full LOC-mediated gateways — `livepeer-modules-openai-gateway` (AI)
+and `livepeer-modules-transcode-gateway` (video); LOC is now the shared route/payment
+control plane for those gateways while the customer SDK handoff path remains a distinct
+demand-side shape. **Observability
 (off-network):** `livepeer-protocol-explorer` (on-chain data platform) and
 `livepeer-network-bot` (Discord reporting; polls the explorer). Most capabilities are now
 🟠 Documented; a daydream gateway, vtuber runners, and Reference Apps await their own repos.

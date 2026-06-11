@@ -5,8 +5,7 @@ onboarded repositories actually say; terms that aren't yet confirmed against cod
 marked _(draft)_. Keep this current as repos are onboarded — it is the fastest way for a
 new reader (human or agent) to get oriented.
 
-Sources so far: [`livepeer-network-modules`](repos/livepeer-network-modules.md),
-[`livepeer-open-clearinghouse`](repos/livepeer-open-clearinghouse.md).
+Sources so far: the eight onboarded repos under [`docs/repos/`](repos/index.md).
 
 ## Suite & roles
 
@@ -19,9 +18,9 @@ Sources so far: [`livepeer-network-modules`](repos/livepeer-network-modules.md),
   accepts paid work, and is identified on-chain by an Ethereum address. In the new
   architecture an orchestrator is a *set of processes* (broker + daemons + trust spine),
   not a single worker binary.
-- **Gateway** — the demand-side entry point that discovers orchestrators, selects a
-  route, attaches payment, and forwards customer traffic. The gateway *shell* lives in
-  other repos; this repo defines the broker/payment/discovery contracts it talks to.
+- **Gateway** — the demand-side entry point that accepts app/customer traffic and forwards
+  it to the network with payment attached. The onboarded full gateways are in-path product
+  surfaces; they now use LOC to select routes and mint payment envelopes.
 - **Runner** — the **backend that actually executes a workload** (e.g. vLLM, FFmpeg, a
   third-party API, a session runtime). Runners are not daemons in this repo; the broker
   dispatches to them over standard wires (HTTP/WS/RTMP/subprocess) declared in config.
@@ -133,6 +132,10 @@ From [`livepeer-modules-transcode-runners`](repos/livepeer-modules-transcode-run
   payment envelopes) and a **receiver** mode (worker side: validates tickets, tracks
   per-sender balances, redeems winning tickets on-chain). Talks to the broker over a unix
   socket; capability/work-unit names are opaque strings.
+- **LOC (Livepeer Open Clearinghouse)** — hosted demand-side clearinghouse API that fronts
+  route selection, payment minting, credit accounting, and settlement. Customers can use it
+  in handoff mode through SDKs; the onboarded full gateways use it with an operator API key
+  while staying in the data path.
 - **Ticket** — a probabilistic micropayment signed by the sender, with a face value and
   win probability. Only **winning** tickets settle on-chain; others are expected-value
   credit.
@@ -187,6 +190,9 @@ From [`livepeer-modules-transcode-runners`](repos/livepeer-modules-transcode-run
 - **pool-controller** — owns persisted Pool state (members, backends, offers,
   assignments), renders broker config, ingests work receipts, and runs backend-selection
   scoring (cooldown, EMA, latency, warm-up).
+- **pool-member-agent** — host-side agent for connected pool members. It reports hardware
+  inventory and keeps an outbound worker session open to the broker, using QUIC when
+  available and WebSocket as fallback.
 - **pool-reconciler** — closes rounds using protocol-daemon timing, payment-daemon
   realized revenue, and pool-controller work receipts.
 - **pool-payout-executor** — executes native-ETH member payouts on Arbitrum and writes
@@ -239,18 +245,18 @@ From [`livepeer-open-clearinghouse`](repos/livepeer-open-clearinghouse.md).
 ## Gateway tier (demand-side front door)
 
 From [`livepeer-modules-transcode-gateway`](repos/livepeer-modules-transcode-gateway.md).
-Note: this is a *full in-path gateway*, distinct from the non-custodial
-[clearinghouse](repos/livepeer-open-clearinghouse.md) front door.
+Note: this is a *full in-path gateway* built on LOC, distinct from the customer SDK
+handoff path exposed by [livepeer-open-clearinghouse](repos/livepeer-open-clearinghouse.md).
 
-- **Gateway (full / in-path)** — a service that exposes a customer API, resolves a route,
-  mints payment, and forwards/relays work to the broker; the **operator funds payment**
-  (customers pay nothing in v1).
-- **Route selector** — gateway component that calls the resolver's `SelectMany` and ranks
-  candidate brokers by constraints / extras / price.
-- **Route health / cooldown** — per-candidate failure tracker; N consecutive failures
-  open a cooldown window during which the route is skipped (gateway-side of selection).
-- **Usage reservation** — a durable per-request/session row (`open → committed / refunded`)
-  recording the work_id, capability, estimated vs committed units, price, and outcome.
+- **Gateway (full / in-path)** — a service that exposes a customer API, opens a LOC
+  job/session, forwards/relays work to the broker LOC selected, and settles usage back to
+  LOC; the **operator funds payment** through LOC credit (customers pay nothing in v1).
+- **LOC job/session** — the gateway-facing route/payment primitive. LOC returns a broker
+  URL, interaction mode, payment envelope, and work/session id; the gateway keeps media or
+  inference traffic in-path.
+- **Usage reservation** — a durable per-request/session row (`open → committed /
+  refunded / pending-settle`) recording the work_id, capability, estimate, committed units,
+  LOC ids, settlement state, and outcome.
 - **Presigned upload URL** — a time-limited S3 (MinIO) PUT URL so clients upload input
   directly; the gateway never touches input bytes.
 - **Master playlist** — the HLS `master.m3u8` listing ABR renditions; its appearance in
@@ -298,6 +304,10 @@ From [`livepeer-protocol-explorer`](repos/livepeer-protocol-explorer.md) and
   activity for a subscribed orchestrator (bot commands mode).
 - **Webhook post vs gateway bot** — base mode posts to a Discord **webhook** (public,
   unauthenticated); commands mode runs an authenticated **gateway bot** (slash commands + DMs).
+- **Webhook fanout** — the network bot can post the same public digest/summary to several
+  Discord server webhooks from one process.
+- **Orchestrator cut alert** — a subscriber DM when an orchestrator reward-cut or fee-share
+  setting changes.
 - **Cursor / delivery tracking** — durable SQLite state so polling and posting resume
   safely; rows are marked sent only after successful delivery.
 - **Snapshot test** — message-format test asserting embed output matches a checked-in

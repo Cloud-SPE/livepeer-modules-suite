@@ -1,6 +1,6 @@
 # Service Registry
 
-**Status:** 🟠 Documented via [livepeer-network-modules](../repos/livepeer-network-modules.md) (`95c6415`)
+**Status:** 🟠 Documented via [livepeer-network-modules](../repos/livepeer-network-modules.md) (`6406a6d`)
 **Submodule:** `modules/livepeer-network-modules/service-registry-daemon/` (+ `orch-coordinator`)
 
 ## What this is — open question resolved

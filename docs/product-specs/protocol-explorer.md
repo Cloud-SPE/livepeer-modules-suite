@@ -1,7 +1,7 @@
 # Protocol Explorer
 
 **Group:** Observability & Reporting (off-network)
-**Status:** 🟠 Documented via [livepeer-protocol-explorer](../repos/livepeer-protocol-explorer.md) (`6dccd70`)
+**Status:** 🟠 Documented via [livepeer-protocol-explorer](../repos/livepeer-protocol-explorer.md) (`88f0ff8`)
 **Submodule:** `modules/livepeer-protocol-explorer/`
 
 ## What this is
@@ -28,7 +28,8 @@ suite's daemons). It is the analytical mirror of the network.
 - **Historical valuation** — rewards/bonds/tickets/payouts priced per block via Uniswap V3
   TWAP × Chainlink, as versioned immutable records.
 - **Derived analytics** — stake balances, gateway state, orchestrator/broadcaster
-  profiles, daily rollups (payouts/rewards/tickets/event metrics), leaderboards.
+  profiles, current delegator/orchestrator state, daily rollups
+  (payouts/rewards/tickets/event metrics), leaderboards.
 - **Broad read API + explorer UI** — events/valuations, prices, summaries, governance,
   gateway/orchestrator/delegator/round views, CSV exports; a Lit SPA (Dashboard,
   Orchestrators, Gateways, Reports, Rewards, Governance, Delegators, Rounds).
@@ -44,4 +45,6 @@ suite's daemons). It is the analytical mirror of the network.
 
 - ✅ Full data platform (indexer + valuation + analytics + API + SPA), deterministic replay.
 - ✅ Reads chain directly; independent of the suite's `service-registry-daemon`/`payment-daemon`.
+- ✅ Latest pin includes delegation-state correctness fixes and safer null USD amount
+  decoding in payout/report APIs.
 - [ ] A few backfill/throughput items remain in the repo's own tech-debt tracker.

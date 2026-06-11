@@ -1,6 +1,6 @@
 # Payment Clearinghouse
 
-**Status:** 🟠 Documented via [livepeer-open-clearinghouse](../repos/livepeer-open-clearinghouse.md) (`a529592`)
+**Status:** 🟠 Documented via [livepeer-open-clearinghouse](../repos/livepeer-open-clearinghouse.md) (`98b23ab`)
 **Submodule:** `modules/livepeer-open-clearinghouse/`
 
 > Open question resolved: there **is** a dedicated clearinghouse repo (this one), and it
@@ -41,6 +41,10 @@ Auth/accounts, API keys, **billing** (credit ledger, top-ups, spend caps, auto-r
 discovery proxy, jobs/sessions issuance + settlement, usage reconciliation, telemetry,
 notifications, and an operator admin console (incl. SDK approval registry + signed SDK
 manifest).
+
+The latest pinned revision also split reusable SDK packages into
+`sdks/{python,typescript,go,rust}/` and kept runnable examples under
+`examples/<lang>/{one-shot-job,streaming-http,streaming-ws}/`.
 
 ## Boundary vs Payment and the network-modules clearing function
 

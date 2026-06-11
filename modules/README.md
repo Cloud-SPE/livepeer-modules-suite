@@ -13,14 +13,14 @@ repo↔capability mapping lives in each [`docs/repos/<repo>.md`](../docs/repos/i
 
 ```text
 modules/
-├── livepeer-network-modules/           # supply-side core (pinned 95c6415)
-├── livepeer-open-clearinghouse/        # demand-side clearinghouse (pinned a529592)
+├── livepeer-network-modules/           # supply-side core (pinned 6406a6d)
+├── livepeer-open-clearinghouse/        # demand-side clearinghouse (pinned 98b23ab)
 ├── livepeer-modules-openai-runners/    # AI runner backends (pinned 3ea3f17)
 ├── livepeer-modules-transcode-runners/ # video runner backends (pinned b33e32f)
-├── livepeer-modules-transcode-gateway/ # full video gateway (pinned 4086880)
-├── livepeer-modules-openai-gateway/    # full OpenAI-compatible AI gateway (pinned 5afaf96)
-├── livepeer-protocol-explorer/         # observability: on-chain data platform (pinned 6dccd70)
-└── livepeer-network-bot/               # observability: Discord reporting bot (pinned 0f62e37)
+├── livepeer-modules-transcode-gateway/ # full video gateway (pinned 2a3cbfa)
+├── livepeer-modules-openai-gateway/    # full OpenAI-compatible AI gateway (pinned baf214a)
+├── livepeer-protocol-explorer/         # observability: on-chain data platform (pinned 88f0ff8)
+└── livepeer-network-bot/               # observability: Discord reporting bot (pinned 1c81f00)
 ```
 
 - Docs: [`../docs/repos/`](../docs/repos/index.md) — one per repo

@@ -2,7 +2,7 @@
 
 **Submodule:** `modules/livepeer-open-clearinghouse/`
 **Origin:** `git@github.com:Cloud-SPE/livepeer-open-clearinghouse.git`
-**Pinned revision:** `a529592` (documented 2026-05-26)
+**Pinned revision:** `98b23ab` (documented 2026-06-11)
 **Status:** 🟠 Onboarded — documented from code. Repo's own status: **pre-alpha**, but the
 headline jobs/sessions path is implemented and end-to-end tested.
 
@@ -93,8 +93,10 @@ network boundary** (operator owns the signing wallet). See
 
 ## SDK surface
 
-- **Reference SDKs / examples** in [`examples/`](../../modules/livepeer-open-clearinghouse/examples/):
-  `python`, `typescript`, `go`, `rust`, plus `openapi.json`.
+- **Reference SDK packages** in [`sdks/`](../../modules/livepeer-open-clearinghouse/sdks/):
+  `python`, `typescript`, `go`, `rust`, plus root [`openapi.json`](../../modules/livepeer-open-clearinghouse/openapi.json).
+- **Runnable examples** in [`examples/`](../../modules/livepeer-open-clearinghouse/examples/):
+  per-language `one-shot-job`, `streaming-http`, and `streaming-ws` flows.
 - **SDK approval registry** (admin domain, `sdk_approval` keyed on
   `(lang, version, git_sha7)`) and a **public signed SDK manifest** (`GET /v1/sdk/manifest`,
   EdDSA-signed) that SDKs check at startup (advisory in v1).
@@ -109,7 +111,7 @@ network boundary** (operator owns the signing wallet). See
 | --- | --- |
 | [Payment Clearinghouse](../product-specs/payment-clearinghouse.md) | The whole service: credit ledger, mint-on-behalf, jobs/sessions settlement |
 | [Payment](../product-specs/payment.md) | `jobs`/`sessions` issuance via `payment-daemon.CreatePayment`; EV-at-issuance charging |
-| [SDKs](../product-specs/sdks.md) | `examples/` reference SDKs, SDK approval registry + signed manifest, telemetry ingest |
+| [SDKs](../product-specs/sdks.md) | `sdks/` reference packages, `examples/` runnable flows, SDK approval registry + signed manifest, telemetry ingest |
 | [Discover](../product-specs/discover.md) | `discovery` domain — auth-aware proxy over `service-registry-daemon` |
 | [Gateways](../product-specs/gateways.md) | Control-plane half of the gateway role (auth + credit + mint); data plane is the SDK ↔ broker |
 

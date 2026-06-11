@@ -1,6 +1,6 @@
 # Payment
 
-**Status:** 🟠 Documented via [livepeer-network-modules](../repos/livepeer-network-modules.md) (`95c6415`)
+**Status:** 🟠 Documented via [livepeer-network-modules](../repos/livepeer-network-modules.md) (`6406a6d`)
 **Submodule:** `modules/livepeer-network-modules/payment-daemon/`
 
 ## What this is — open question resolved
@@ -40,6 +40,11 @@ operator-owned **pooled wallet** and hands the signed envelope to the customer's
 credit balance and trued up on settle. So `payment-daemon` (this module) is the shared
 ticket engine; the clearinghouse is the credit/accounting layer in front of it.
 
+The two full gateways now follow that same LOC-mediated shape: they call the
+clearinghouse over HTTPS to open jobs/sessions, receive a selected broker URL plus a
+`Livepeer-Payment` envelope, and settle actual usage back to LOC. They no longer need a
+local sender daemon or local chain key in the gateway process.
+
 ## Role in the suite
 
 - **Sent by:** the [Payment Clearinghouse](payment-clearinghouse.md) (pooled wallet) on
@@ -51,4 +56,5 @@ ticket engine; the clearinghouse is the credit/accounting layer in front of it.
 
 - ✅ Probabilistic tickets; opaque capability/work-unit; EV credit + on-chain redemption.
 - ✅ `Livepeer-Payment` header stays wire-compatible; routed tuple in sibling headers.
-- [ ] Warm/cold key handling details for redemption (see repo plan 0017) — expand if needed.
+- ✅ `payment-daemon` now includes Prometheus metrics, operations dashboards/alerts, and a
+  payout simulator for modeling ticket sizing and expected-value behavior.

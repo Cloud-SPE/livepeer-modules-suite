@@ -1,6 +1,6 @@
 # Orchestrators
 
-**Status:** 🟠 Documented via [livepeer-network-modules](../repos/livepeer-network-modules.md) (`95c6415`)
+**Status:** 🟠 Documented via [livepeer-network-modules](../repos/livepeer-network-modules.md) (`6406a6d`)
 **Submodule:** `modules/livepeer-network-modules/`
 
 ## What this is
@@ -18,13 +18,16 @@ price in `host-config.yaml`, **identify** the backend ([Runners](runners.md)), *
 - **`capability-broker`** — one per host. Owns `GET /registry/offerings` and
   `/registry/health`, routes inbound paid requests by `Livepeer-Capability` header to the
   declared backend wrapped in the declared interaction mode, and reports `actualUnits` to
-  the payment daemon. Carries zero per-capability code.
+  the payment daemon. Carries zero per-capability code. Current code also includes broker
+  metrics, registry/backend health gauges, and outbound worker sessions over QUIC.
 - **`payment-daemon` (receiver)** — validates tickets, tracks balances, redeems winning
   tickets on-chain. See [Payment](payment.md).
 - **`orch-coordinator`** — public, key-less; scrapes broker offerings, builds a candidate
   manifest, and publishes the signed manifest. See [Service Registry](service-registry.md).
 - **`secure-orch-console` + cold key** — the firewalled trust spine that signs manifests.
-- **`protocol-daemon`** — on-chain round init, reward, and `serviceURI` writes.
+- **`protocol-daemon`** — on-chain round init, reward, and `serviceURI` writes. Current
+  code also includes orchestrator admin actions, reward/round-init lock handling,
+  treasury/op-config support, and gRPC action endpoints used by operator consoles.
 
 ## Role in the suite
 

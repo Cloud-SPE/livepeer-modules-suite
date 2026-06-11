@@ -7,10 +7,10 @@ status. "Verified" means a human or agent has confirmed the document matches rea
 | Doc | Purpose | Status |
 | --- | --- | --- |
 | [core-beliefs.md](core-beliefs.md) | Agent-first operating principles for this repo | ✅ Verified |
-| [../../ARCHITECTURE.md](../../ARCHITECTURE.md) | Top-level domain map + job-flow across capabilities | 🟡 Draft — supply side grounded, demand side pending repos |
-| [../glossary.md](../glossary.md) | Shared vocabulary for the suite | ✅ Verified (first repo) |
-| [../product-specs/index.md](../product-specs/index.md) | Capability overviews + onboarding status | 🟠 Supply-side documented |
-| [../repos/index.md](../repos/index.md) | Per-submodule docs + pinned revisions | 🟠 First repo onboarded |
+| [../../ARCHITECTURE.md](../../ARCHITECTURE.md) | Top-level domain map + job-flow across capabilities | 🟠 Documented across onboarded repos; Reference Apps still stubbed |
+| [../glossary.md](../glossary.md) | Shared vocabulary for the suite | 🟠 Verified across onboarded repos |
+| [../product-specs/index.md](../product-specs/index.md) | Capability overviews + onboarding status | 🟠 Network + observability documented |
+| [../repos/index.md](../repos/index.md) | Per-submodule docs + pinned revisions | 🟠 Eight repos onboarded |
 
 ## Status legend
 

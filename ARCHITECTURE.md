@@ -4,13 +4,11 @@ Top-level map of the Livepeer Modules Suite: what the domains are, how a unit of
 flows through them, and where the boundaries sit. This is a bird's-eye view — each
 module's detail lives in [`docs/product-specs/`](docs/product-specs/index.md).
 
-> **Status.** Confirmed against three onboarded repos: the supply side
-> ([livepeer-network-modules](docs/repos/livepeer-network-modules.md)), the demand-side
-> control plane ([livepeer-open-clearinghouse](docs/repos/livepeer-open-clearinghouse.md)),
-> and concrete AI Runner backends
-> ([livepeer-modules-openai-runners](docs/repos/livepeer-modules-openai-runners.md)). A
-> standalone full **Gateway shell**, **video/vtuber runners**, and **reference apps** are
-> not yet onboarded, so those parts remain provisional.
+> **Status.** Confirmed against eight onboarded repos: supply-side core
+> ([livepeer-network-modules](docs/repos/livepeer-network-modules.md)), demand-side LOC
+> ([livepeer-open-clearinghouse](docs/repos/livepeer-open-clearinghouse.md)), AI/video
+> runners, AI/video gateways, and off-network observability. Reference Apps, a daydream
+> gateway, and vtuber runners remain not-yet-onboarded.
 
 ## The big picture
 
@@ -99,17 +97,17 @@ OpenAI/Cohere-shaped AI backends (chat, embeddings, audio, TTS, image, rerank), 
 backends (VOD transcode, ABR ladder, and a live RTMP→HLS runtime). Both implement the
 broker↔runner HTTP contract and report work units back to the broker.
 
-The **live path** is the suite's first fully cross-repo data flow, driven by the
+The **live path** is one of the suite's fully cross-repo data flows, driven by the
 [transcode-gateway](docs/repos/livepeer-modules-transcode-gateway.md):
 
-> **transcode-gateway** (owns RTMP `:1935`, mints payment, relays frames) → broker
-> (session authority + payment) → transcode-runners **live-runner** (RTMP ingest + HLS,
-> emitting `output_seconds` usage events back to the broker)
+> **transcode-gateway** (owns RTMP `:1935`, opens/refills/closes LOC sessions, relays
+> frames) → broker (session authority + payment envelope from LOC) → transcode-runners
+> **live-runner** (RTMP ingest + HLS, emitting `output_seconds` usage events back to the
+> broker)
 
 This is the `live-session-gateway-ingest@v0` mode (the transcode-runners repo calls the
-topology "Option B"). Note the [clearinghouse](docs/repos/livepeer-open-clearinghouse.md)
-independently supports the same session mode, but it is a **separate, non-custodial
-demand-side surface** — not part of this gateway's path.
+topology "Option B"). LOC provides the route/payment/session control plane; the gateway
+remains the in-path video surface and RTMP relay.
 
 See [`docs/repos/livepeer-network-modules.md`](docs/repos/livepeer-network-modules.md)
 for the component map and the [glossary](docs/glossary.md) for terms.
@@ -136,22 +134,19 @@ discovery proxy, mint) in the clearinghouse; **data plane** (interaction-mode tr
 `Livepeer-Payment`) in the SDK. It **consumes the supply-side daemons** (`payment-daemon`,
 `service-registry-daemon`) over Unix-socket gRPC.
 
-**There are also two full in-path gateways** that talk to the same daemons directly but
-**pay the network themselves** (customers pay nothing in v1) and stay in the data path:
-the [openai-gateway](docs/repos/livepeer-modules-openai-gateway.md) (OpenAI-compatible AI,
-fronting the openai-runners) and the
+**There are also two full in-path gateways** that now consume LOC instead of local
+daemon sidecars: the [openai-gateway](docs/repos/livepeer-modules-openai-gateway.md)
+(OpenAI-compatible AI, fronting the openai-runners) and the
 [transcode-gateway](docs/repos/livepeer-modules-transcode-gateway.md) (video, owns the
-RTMP endpoint, fronting the transcode-runners). So there are **three alternative demand-side
-front doors** — non-custodial credit + handoff (clearinghouse) vs. two operator-funded
-in-path gateways — not layers of one stack. A deployment picks one. See
-[Gateways](docs/product-specs/gateways.md).
+RTMP endpoint, fronting the transcode-runners). They open LOC jobs/sessions, receive a
+single selected broker route plus `Livepeer-Payment`, forward work in-path, and settle
+actual usage back to LOC. Customers pay nothing in v1; the gateway operator pays from its
+LOC credit balance.
 
-> **Intended direction (TD-8).** The two operator-funded gateways are meant to be
-> **reference examples**, not standalone production stacks. The plan is to migrate them
-> onto the clearinghouse + SDKs and remove their direct `service-registry-daemon` /
-> `payment-daemon` / wallet code — so the long-term shape is: the **clearinghouse + SDKs is
-> the recommended path**, and the gateways become [reference apps](docs/product-specs/reference-apps.md)
-> showcasing how little a builder must handle.
+So there are now two main demand-side application shapes sharing LOC: **customer handoff**
+(customer credit + SDK talks to broker directly) and **operator-funded in-path gateways**
+(gateway operator credit + gateway stays in the data path). See
+[Gateways](docs/product-specs/gateways.md).
 
 ## Observability side (off-network)
 

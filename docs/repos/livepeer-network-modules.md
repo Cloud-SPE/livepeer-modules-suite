@@ -2,7 +2,7 @@
 
 **Submodule:** `modules/livepeer-network-modules/`
 **Origin:** `git@github.com:Cloud-SPE/livepeer-network-modules.git`
-**Pinned revision:** `95c6415` (documented 2026-05-26)
+**Pinned revision:** `6406a6d` (documented 2026-06-11)
 **Status:** 🟠 Onboarded — documented from code
 
 The first and foundational repo in the suite: a **workload-agnostic rearchitecture of
@@ -50,23 +50,24 @@ Host archetypes: `secure-orch` (cold key, firewalled), `orch-coordinator` (publi
 key-less publisher), `worker-orch` (broker + receiver + backends), and the gateway
 (resolver + sender + adapters).
 
-## Components (14)
+## Components (15)
 
 Each is a top-level directory with its own `AGENTS.md`/`docs/`. Status reflects the
 pinned revision.
 
 | Component | Lang | Purpose | Status |
 | --- | --- | --- | --- |
-| `capability-broker` | Go | Workload-agnostic per-host dispatch; owns offerings/health; routes to backends; reports usage | Shipped (6 mode drivers, 7 extractors, RTMP+LL-HLS, session+SFU) |
-| `payment-daemon` | Go | Sender/receiver micropayment sidecar; ticket validation + on-chain redemption | Shipped (BoltDB sessions, Arbitrum, warm-key lifecycle) |
+| `capability-broker` | Go | Workload-agnostic per-host dispatch; owns offerings/health; routes to backends; reports usage | Shipped (mode drivers, extractors, metrics, QUIC/WebSocket worker sessions) |
+| `payment-daemon` | Go | Sender/receiver micropayment sidecar; ticket validation + on-chain redemption | Shipped (BoltDB sessions, Arbitrum, metrics, payout simulator) |
 | `livepeer-network-protocol` | proto+Go | Wire spec: modes, extractors, manifest schema, payment/sessionrunner protos, conformance | Shipped (spec + reference impls + conformance) |
 | `proto-contracts` | proto+Go | Generated protobuf bindings shared across daemons | Shipped |
 | `orch-coordinator` | Go | Scrapes brokers, builds candidate manifest, publishes signed manifest | Scaffold → building (plan 0018) |
 | `secure-orch-console` | Go | Cold-key diff-and-sign console (LAN-only) | Shipped v0.1 (signing, diff, audit log) |
-| `protocol-daemon` | Go | On-chain round init, reward, serviceURI writes | Shipped (plan 0020) |
+| `protocol-daemon` | Go | On-chain round init, reward, serviceURI writes, orchestrator admin actions | Shipped (gRPC action surface + locked lifecycle) |
 | `service-registry-daemon` | Go | Publisher + resolver; fetch/verify/cache signed manifests | Shipped |
 | `chain-commons` | Go (lib) | Shared chain/RPC/tx-intent plumbing | Scaffold → building (interfaces + TxIntent shipped) |
-| `pool-controller` | Go | Pool control plane: members/backends/offers, broker config, scoring | Shipped (plan 0029) |
+| `pool-controller` | Go | Pool control plane: members/backends/offers, broker config, scoring, web admin | Shipped (connected-pool UX + runtime config) |
+| `pool-member-agent` | Go | Connected pool member agent: hardware report + outbound broker worker session | Shipped (QUIC preferred, WebSocket fallback) |
 | `pool-reconciler` | Go | Round-close accounting producer | Shipped |
 | `pool-payout-executor` | Go | Native-ETH member payouts on Arbitrum | Shipped |
 | `customer-portal` | TS | Shared SaaS library: API keys, ledger, Stripe top-ups, admin UI | Shipped (library, not a service) |
@@ -80,7 +81,7 @@ pinned revision.
 | [Runners](../product-specs/runners.md) | Backends dispatched to by the broker (declared in `host-config.yaml`); `sessionrunner` protocol in `livepeer-network-protocol` |
 | [Pools](../product-specs/pools.md) | `pool-controller` + `pool-reconciler` + `pool-payout-executor` |
 | [Payment](../product-specs/payment.md) | `payment-daemon` (sender + receiver), on-chain `TicketBroker` |
-| [Payment Clearinghouse](../product-specs/payment-clearinghouse.md) | _Partial_: receiver settlement + `pool-payout-executor` distribution (no standalone clearinghouse here) |
+| [Payment Clearinghouse](../product-specs/payment-clearinghouse.md) | _Not the demand-side clearinghouse_: supply-side receiver settlement + `pool-payout-executor` distribution only |
 | [Service Registry](../product-specs/service-registry.md) | `service-registry-daemon` (publisher) + on-chain `ServiceRegistry`/`AIServiceRegistry` + signed manifest |
 | [Discover](../product-specs/discover.md) | `service-registry-daemon` (resolver) `Resolver.Select` |
 | [SDKs](../product-specs/sdks.md) | `customer-portal` (TS shared library) |

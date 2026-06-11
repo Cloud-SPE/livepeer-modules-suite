@@ -1,6 +1,6 @@
 # Discover
 
-**Status:** 🟠 Documented via [livepeer-network-modules](../repos/livepeer-network-modules.md) (`95c6415`)
+**Status:** 🟠 Documented via [livepeer-network-modules](../repos/livepeer-network-modules.md) (`6406a6d`)
 **Submodule:** `modules/livepeer-network-modules/service-registry-daemon/` (resolver mode)
 
 ## What this is — open question resolved
@@ -25,12 +25,15 @@ per-capability lookup table.
 
 ## Consumers
 
-- **Gateway / SDK** call the resolver directly for hot-path selection.
+- **Gateway / SDK** may call the resolver directly in daemon-integrated deployments.
 - The [Payment Clearinghouse](payment-clearinghouse.md) exposes an **auth-aware discovery
   proxy** (its `discovery` domain) over `service-registry-daemon` — `Resolve` / `Select` /
   `SelectMany` with an in-process TTL cache — so customers can list capabilities,
   orchestrators, and routes through the same authenticated HTTP API. `SelectedRoute.extra`
   carries the `interaction_mode`.
+- The onboarded OpenAI and transcode gateways now consume discovery **through LOC**: the
+  gateway opens a LOC job/session and receives the selected broker route in the response;
+  local catalog endpoints are refreshed from LOC's capability catalog.
 
 ## Role in the suite
 

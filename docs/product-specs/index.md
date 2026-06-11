@@ -12,7 +12,7 @@ implement several capabilities.
 
 | Module | Spec | Implemented in | Status |
 | --- | --- | --- | --- |
-| Gateways | [gateways.md](gateways.md) | full gateways [openai-gateway](../repos/livepeer-modules-openai-gateway.md) (AI) + [transcode-gateway](../repos/livepeer-modules-transcode-gateway.md) (video); control-plane variant in [open-clearinghouse](../repos/livepeer-open-clearinghouse.md) | 🟠 Documented |
+| Gateways | [gateways.md](gateways.md) | LOC-mediated full gateways [openai-gateway](../repos/livepeer-modules-openai-gateway.md) (AI) + [transcode-gateway](../repos/livepeer-modules-transcode-gateway.md) (video); handoff path in [open-clearinghouse](../repos/livepeer-open-clearinghouse.md) | 🟠 Documented |
 | Orchestrators | [orchestrators.md](orchestrators.md) | [livepeer-network-modules](../repos/livepeer-network-modules.md) | 🟠 Documented |
 | Runners | [runners.md](runners.md) | [livepeer-modules-openai-runners](../repos/livepeer-modules-openai-runners.md) (backends) + contracts in [network-modules](../repos/livepeer-network-modules.md) | 🟠 Documented |
 | Pools | [pools.md](pools.md) | [livepeer-network-modules](../repos/livepeer-network-modules.md) | 🟠 Documented |
@@ -20,7 +20,7 @@ implement several capabilities.
 | Service Registry | [service-registry.md](service-registry.md) | [livepeer-network-modules](../repos/livepeer-network-modules.md) | 🟠 Documented |
 | Discover | [discover.md](discover.md) | [livepeer-network-modules](../repos/livepeer-network-modules.md) (+ proxy in [open-clearinghouse](../repos/livepeer-open-clearinghouse.md)) | 🟠 Documented |
 | Payment Clearinghouse | [payment-clearinghouse.md](payment-clearinghouse.md) | [livepeer-open-clearinghouse](../repos/livepeer-open-clearinghouse.md) | 🟠 Documented |
-| SDKs | [sdks.md](sdks.md) | [open-clearinghouse](../repos/livepeer-open-clearinghouse.md) `examples/` + `customer-portal` in [network-modules](../repos/livepeer-network-modules.md) | 🟠 Documented |
+| SDKs | [sdks.md](sdks.md) | [open-clearinghouse](../repos/livepeer-open-clearinghouse.md) `sdks/` + runnable `examples/`; `customer-portal` in [network-modules](../repos/livepeer-network-modules.md) | 🟠 Documented |
 | Reference Apps | [reference-apps.md](reference-apps.md) | TBD (removed from network-modules) | 🟡 Stub — awaiting repo |
 
 ### Observability & Reporting (off-network)

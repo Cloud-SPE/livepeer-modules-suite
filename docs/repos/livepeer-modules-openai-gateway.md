@@ -2,10 +2,11 @@
 
 **Submodule:** `modules/livepeer-modules-openai-gateway/`
 **Origin:** `git@github.com:Cloud-SPE/livepeer-modules-openai-gateway.git`
-**Pinned revision:** `5afaf96` (2 commits past tag `v1.3.1`; documented 2026-05-26)
-**Status:** 🟠 Onboarded — documented from code. All domains grade C ("not yet exercised
-against a real broker"), but better-tested than the video gateway (45 unit tests + a
-`make smoke` e2e flow; SaaS shell verified against Postgres).
+**Pinned revision:** `baf214a` (4 commits past tag `v1.3.1`; documented 2026-06-11)
+**Status:** 🟠 Onboarded — documented from code. The latest pin integrates LOC
+([livepeer-open-clearinghouse](livepeer-open-clearinghouse.md)) for route selection,
+payment minting, and settlement; no local daemon sidecars or chain keys live in the
+gateway process.
 
 The **OpenAI-compatible AI [Gateway](../product-specs/gateways.md)** — the demand-side
 front door for AI workloads, and the AI counterpart to the video
@@ -18,21 +19,22 @@ It is the natural front door for the
 
 ## Same pattern as transcode-gateway
 
-This repo is the AI twin of the video gateway — same six-layer shape, same
-daemons-direct integration, same operator-funded model, same SaaS shell — differing in
-language (TS/Fastify vs Go) and surface (OpenAI inference vs video):
+This repo is the AI twin of the video gateway — same six-layer shape, same LOC-mediated
+integration, same operator-funded model, same SaaS shell — differing in language
+(TS/Fastify vs Go) and surface (OpenAI inference vs video):
 
 | Aspect | This (openai-gateway) | transcode-gateway |
 | --- | --- | --- |
 | Surface | `/v1/chat`, `/embeddings`, `/images`, `/audio/*`, `/rerank`, `/models` | `/api/v1/abr*`, `/api/v1/live*` |
 | Language | TypeScript / Fastify | Go |
 | Modes | `http-reqresp@v0` / `http-stream@v0` / `http-multipart@v0` | `http-reqresp@v0` / `live-session-gateway-ingest@v0` |
-| Funding | Operator pays; no customer billing in v1 | Same |
+| Funding | Operator pays through LOC credit; no customer billing in v1 | Same |
 | Data path | In-path proxy of inference requests | In-path (RTMP relay + descriptors) |
 
-Both are **distinct from the non-custodial [clearinghouse](livepeer-open-clearinghouse.md)**
-(which uses handoff mode + customer credit). The suite now has **three demand-side front
-doors**; a deployment picks one.
+Both now consume the [clearinghouse](livepeer-open-clearinghouse.md) over HTTPS with a
+gateway-owned `pymth_` API key. They remain distinct from the customer's handoff-mode SDK
+path: these gateways stay in the data path and pay from the operator's LOC credit balance,
+while the clearinghouse SDK path hands the broker call to the customer app.
 
 ## Six layers (from DESIGN.md)
 
@@ -40,27 +42,24 @@ doors**; a deployment picks one.
    `/v1/images/generations`, `/v1/audio/speech`, `/v1/audio/transcriptions`, `/v1/rerank`,
    `/v1/models`. (`/v1/realtime` is v2.)
 2. **Wire translation** — OpenAI request → `Livepeer-Capability` + mode
-   (`http-reqresp` / `http-stream` / `http-multipart`); in `gateway/src/proxy/livepeer/`.
-3. **Route selection** — `service-registry-daemon` `SelectMany`; `routeSelector` ranks by
-   constraints/extras/price; `routeHealth` cooldowns + failover.
-4. **Payment** — `payment-daemon` mints `Livepeer-Payment` per request; gateway pays the
-   network (customers pay nothing in v1).
+   (`http-reqresp` / `http-stream` / `http-multipart`); in `gateway/src/proxy/`.
+3. **Route selection + payment** — `gateway/src/loc/` opens a LOC job; LOC selects one
+   broker route and returns the `Livepeer-Payment` envelope in the same response.
+4. **Settlement** — a durable background settler reports actual units/outcome back to LOC
+   (`LOC_SETTLE_INTERVAL_MS`, `LOC_SETTLE_MAX_ATTEMPTS`); LOC refunds unused estimate.
 5. **SaaS shell** — Postgres waitlist → email-verify → admin-approve → API-key; portal
    cookie sessions; `ADMIN_TOKEN` bootstrap.
 6. **Usage tracking** — per-request reservations (open → committed / refunded) with
    route-aware settlement metadata (for visibility + future billing).
 
-`/v1/models` reflects the on-chain registry live (dynamic discovery), not a hardcoded
-catalog. Three zero-build Lit SPAs (`web/site`, `web/portal`, `web/admin`).
+`/v1/models` reflects a LOC-backed capability/offerings cache, not a hardcoded catalog.
+Three zero-build Lit SPAs (`web/site`, `web/portal`, `web/admin`).
 
 ## Capability names (TD-7)
 
-This gateway queries **colon-form** capability ids: `openai:chat-completions`,
-`openai:embeddings`, `openai:images-generations`, `openai:audio-speech`,
-`openai:audio-transcriptions` (+ `openai:realtime` reserved for v2), and `rerank`. The
-[openai-runners](livepeer-modules-openai-runners.md) declare **hyphen-form** canonical
-names (`openai-chat-completions`, …). Same colon-vs-hyphen gap as the video side — the
-broker host-config / registry is the bridge; the end-to-end mapping still needs confirming.
+The model id is the LOC offering id. The gateway no longer maps user-facing model names to
+locally hardcoded model metadata; `/v1/models` is built from LOC's `GET /v1/capabilities`
+catalog plus operator overrides.
 
 ## Capability mapping (repo → suite capabilities)
 
@@ -68,22 +67,19 @@ broker host-config / registry is the bridge; the end-to-end mapping still needs 
 | --- | --- |
 | [Gateways](../product-specs/gateways.md) | The whole service — full in-path OpenAI-compatible gateway |
 | [SDKs](../product-specs/sdks.md) | OpenAI wire compatibility ("change `base_url`") + OpenAPI for the SaaS routes |
-| [Discover](../product-specs/discover.md) | `routeSelector` over `service-registry-daemon` + dynamic `/v1/models` |
-| [Payment](../product-specs/payment.md) | `payment-daemon` `CreatePayment`; gateway-funded, per request |
+| [Discover](../product-specs/discover.md) | LOC job open + LOC-backed catalog; no local route selector |
+| [Payment](../product-specs/payment.md) | LOC-minted `Livepeer-Payment`; gateway-funded via operator LOC credit |
 
 ## Notes & open items
 
-- **Intended as a reference example (TD-8):** like the video gateway, this currently embeds
-  direct `service-registry-daemon` + `payment-daemon` usage and an operator wallet. The plan
-  is to migrate it onto the [clearinghouse](livepeer-open-clearinghouse.md) +
-  [SDKs](../product-specs/sdks.md) and remove that direct daemon/wallet code, demonstrating
-  SDK-based building without on-chain/wallet complexity — folding it into the
-  [Reference Apps](../product-specs/reference-apps.md).
+- **Reference-app posture:** this gateway now demonstrates building a product surface on
+  LOC without local chain keys or daemon sidecars. It still stays in-path and pays from an
+  operator LOC account, so it is not the same as the customer SDK handoff flow.
 - **Serves the AI runners:** its `/v1/*` capabilities line up with the
   [openai-runners](livepeer-modules-openai-runners.md) (chat, embeddings, images, audio,
   rerank).
-- **Maturity:** v1.3.1+; grade C across the board but with real unit tests + smoke flow;
-  still unverified against a live broker. No billing, no `/v1/realtime` in v1.
+- **Maturity:** v1.3.1+ with LOC integration and `make loc-smoke`; no customer billing,
+  no `/v1/realtime` in v1.
 - **daydream gateway** (and vtuber runners, reference apps) remain separate, not-yet-
   onboarded repos.
 
