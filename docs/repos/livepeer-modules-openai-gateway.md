@@ -2,7 +2,7 @@
 
 **Submodule:** `modules/livepeer-modules-openai-gateway/`
 **Origin:** `git@github.com:Cloud-SPE/livepeer-modules-openai-gateway.git`
-**Pinned revision:** `baf214a` (4 commits past tag `v1.3.1`; documented 2026-06-11)
+**Pinned revision:** `819e059` (8 commits past tag `v1.3.1`; product version bumped to `v1.4.1`; documented 2026-06-15)
 **Status:** 🟠 Onboarded — documented from code. The latest pin integrates LOC
 ([livepeer-open-clearinghouse](livepeer-open-clearinghouse.md)) for route selection,
 payment minting, and settlement; no local daemon sidecars or chain keys live in the
@@ -78,7 +78,7 @@ catalog plus operator overrides.
 - **Serves the AI runners:** its `/v1/*` capabilities line up with the
   [openai-runners](livepeer-modules-openai-runners.md) (chat, embeddings, images, audio,
   rerank).
-- **Maturity:** v1.3.1+ with LOC integration and `make loc-smoke`; no customer billing,
+- **Maturity:** v1.4.1 with LOC integration and `make loc-smoke`; no customer billing,
   no `/v1/realtime` in v1.
 - **daydream gateway** (and vtuber runners, reference apps) remain separate, not-yet-
   onboarded repos.

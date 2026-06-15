@@ -2,8 +2,10 @@
 
 **Submodule:** `modules/livepeer-network-modules/`
 **Origin:** `git@github.com:Cloud-SPE/livepeer-network-modules.git`
-**Pinned revision:** `6406a6d` (documented 2026-06-11)
-**Status:** 🟠 Onboarded — documented from code
+**Pinned revision:** `689b51a` (product/image versions default to `v1.4.1`; documented 2026-06-15)
+**Status:** 🟠 Onboarded — documented from code. Latest pin adds the **agent-mode
+automated manifest sign cycle** (plan 0042) on `secure-orch-console`/`orch-coordinator`
+and refreshes market pricing.
 
 The first and foundational repo in the suite: a **workload-agnostic rearchitecture of
 the Livepeer Network supply side**, and the first layer of abstraction over the Livepeer
@@ -41,7 +43,10 @@ is the authoritative deep dive. In brief:
 2. **Interaction-mode typology** — fixed wire contracts; implemented once per side.
 3. **Declarative capability config** — `host-config.yaml` (identity, capabilities, backends).
 4. **Discovery** — flat capability-tuple manifest; on-chain pointer → signed off-chain manifest.
-5. **Trust spine** — operator-driven, cold-key-signed manifest publication cycle.
+5. **Trust spine** — cold-key-signed manifest publication cycle. Operator-driven by
+   default; an opt-in agent (plan 0042) can auto-sign within an operator-authored policy
+   envelope (content-identical renewals always; bounded benign changes when enabled),
+   with everything else held for a discrete operator action.
 6. **Payment** — sender/receiver daemon; opaque capability/work-unit; arithmetic only.
 7. **Routing (gateway side)** — resolve tuple → pick mode adapter → wrap headers → forward.
 8. **Demand visibility** — comparable Prometheus surfaces on both sides; third-party aggregation.
@@ -61,8 +66,8 @@ pinned revision.
 | `payment-daemon` | Go | Sender/receiver micropayment sidecar; ticket validation + on-chain redemption | Shipped (BoltDB sessions, Arbitrum, metrics, payout simulator) |
 | `livepeer-network-protocol` | proto+Go | Wire spec: modes, extractors, manifest schema, payment/sessionrunner protos, conformance | Shipped (spec + reference impls + conformance) |
 | `proto-contracts` | proto+Go | Generated protobuf bindings shared across daemons | Shipped |
-| `orch-coordinator` | Go | Scrapes brokers, builds candidate manifest, publishes signed manifest | Scaffold → building (plan 0018) |
-| `secure-orch-console` | Go | Cold-key diff-and-sign console (LAN-only) | Shipped v0.1 (signing, diff, audit log) |
+| `orch-coordinator` | Go | Scrapes brokers, builds candidate manifest, publishes signed manifest; serves agent conditional-fetch with bearer auth + renewal window | Building (plan 0018; plan 0042 agent endpoints) |
+| `secure-orch-console` | Go | Cold-key diff-and-sign console (LAN-only); optional `--agent` daemon mode that auto-signs within a sign-policy envelope | Shipped v0.1 + agent-mode sign cycle (sign-policy engine, change classifier, held-queue review UI, metrics, webhook alerts) (plan 0042) |
 | `protocol-daemon` | Go | On-chain round init, reward, serviceURI writes, orchestrator admin actions | Shipped (gRPC action surface + locked lifecycle) |
 | `service-registry-daemon` | Go | Publisher + resolver; fetch/verify/cache signed manifests | Shipped |
 | `chain-commons` | Go (lib) | Shared chain/RPC/tx-intent plumbing | Scaffold → building (interfaces + TxIntent shipped) |

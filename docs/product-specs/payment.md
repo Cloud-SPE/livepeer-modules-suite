@@ -1,6 +1,6 @@
 # Payment
 
-**Status:** 🟠 Documented via [livepeer-network-modules](../repos/livepeer-network-modules.md) (`6406a6d`)
+**Status:** 🟠 Documented via [livepeer-network-modules](../repos/livepeer-network-modules.md) (`689b51a`)
 **Submodule:** `modules/livepeer-network-modules/payment-daemon/`
 
 ## What this is — open question resolved

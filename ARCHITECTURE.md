@@ -86,8 +86,10 @@ publishing, and trust daemons. The broker:
 
 Discovery is **hybrid**: an on-chain pointer (`ServiceRegistry`/`AIServiceRegistry`
 `getServiceURI`) → an off-chain, **cold-key-signed manifest** of capability tuples.
-A firewalled `secure-orch` holds the cold key and signs manifests; the public
-`orch-coordinator` only scrapes and publishes; every resolver re-verifies the signature.
+A firewalled `secure-orch` holds the cold key and signs manifests (operator-driven, or
+via an opt-in agent that auto-signs only within an operator-authored policy envelope —
+plan 0042); the public `orch-coordinator` only scrapes and publishes; every resolver
+re-verifies the signature.
 Payment is probabilistic micropayment **tickets** settled via the on-chain `TicketBroker`.
 
 Concrete runners now exist in two repos: the

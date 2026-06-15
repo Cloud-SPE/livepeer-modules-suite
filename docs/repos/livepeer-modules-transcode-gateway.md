@@ -2,7 +2,7 @@
 
 **Submodule:** `modules/livepeer-modules-transcode-gateway/`
 **Origin:** `git@github.com:Cloud-SPE/livepeer-modules-transcode-gateway.git`
-**Pinned revision:** `2a3cbfa` (6 commits past tag `v1.3.1`; documented 2026-06-11)
+**Pinned revision:** `f970fab` (10 commits past tag `v1.3.1`; product/image version bumped to `v1.4.1`; documented 2026-06-15)
 **Status:** 🟠 Onboarded — documented from code. Latest architecture/design/deployment
 docs move routing and payment to LOC ([livepeer-open-clearinghouse](livepeer-open-clearinghouse.md)):
 the gateway no longer needs local payer/resolver daemon sidecars or an operator keystore.
@@ -97,7 +97,7 @@ console). In production it's one Go process on one port serving `/`, `/portal/`,
   `gateway/internal/proxy/loc/` describe the current LOC path.
 - **Ported from an "openai gateway":** the code references a sibling OpenAI/daydream
   gateway it was ported from — a likely future repo to onboard.
-- **Maturity:** v1.3.1+ with LOC integration. No customer billing, no playback proxy,
+- **Maturity:** v1.4.1 with LOC integration. No customer billing, no playback proxy,
   poll-only (no SSE/webhooks to clients) in v1.
 
 ## Source pointers

@@ -1,6 +1,6 @@
 # Orchestrators
 
-**Status:** 🟠 Documented via [livepeer-network-modules](../repos/livepeer-network-modules.md) (`6406a6d`)
+**Status:** 🟠 Documented via [livepeer-network-modules](../repos/livepeer-network-modules.md) (`689b51a`)
 **Submodule:** `modules/livepeer-network-modules/`
 
 ## What this is
@@ -25,6 +25,8 @@ price in `host-config.yaml`, **identify** the backend ([Runners](runners.md)), *
 - **`orch-coordinator`** — public, key-less; scrapes broker offerings, builds a candidate
   manifest, and publishes the signed manifest. See [Service Registry](service-registry.md).
 - **`secure-orch-console` + cold key** — the firewalled trust spine that signs manifests.
+  An opt-in agent mode (plan 0042) auto-signs within an operator-authored sign-policy
+  envelope; anything outside it is held for operator review.
 - **`protocol-daemon`** — on-chain round init, reward, and `serviceURI` writes. Current
   code also includes orchestrator admin actions, reward/round-init lock handling,
   treasury/op-config support, and gRPC action endpoints used by operator consoles.

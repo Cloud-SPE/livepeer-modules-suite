@@ -2,7 +2,7 @@
 
 **Submodule:** `modules/livepeer-modules-transcode-runners/`
 **Origin:** `git@github.com:Cloud-SPE/livepeer-modules-transcode-runners.git`
-**Pinned revision:** `b33e32f` (documented 2026-05-26)
+**Pinned revision:** `0b32b67` (product/image version `v1.4.1`; documented 2026-06-15)
 **Status:** 🟠 Onboarded — documented from code. transcode/abr runners mature; **live-runner
 is active/design-phase** (Option B, with external broker + gateway blockers).
 
@@ -68,13 +68,17 @@ mapping.
 
 ## Hardware & strict GPU mode
 
-- **NVIDIA** NVENC/NVDEC (CUDA 13), **Intel** QSV/VAAPI, **AMD** VAAPI — vendor-specific
+- **NVIDIA** NVENC/NVDEC (CUDA 12.8.1), **Intel** QSV/VAAPI, **AMD** VAAPI — vendor-specific
   runtime images and hardware-filtered presets.
 - **Strict GPU mode is the default**: jobs **fail closed** rather than silently using
   CPU. Presets are filtered at startup against the *actually usable* decode+encode path
   (visible hardware isn't enough). CPU-side features (subtitle/watermark/thumbnail) are
   rejected under strict mode.
-- Build note: FFmpeg built without `libnpp` on CUDA 13.2.1 (upstream API incompatibility).
+- Build note: the NVIDIA base pins **CUDA 12.8.1** (not 13.x) so Pascal (`sm_61`, e.g.
+  GTX 1080) still builds — CUDA 13 dropped `compute_61`. FFmpeg's CUDA kernels are
+  compiled to a single low PTX arch (`compute_61`); the driver JITs that forward to any
+  newer card (Turing/Ampere/Ada), which also fixed the 1080 segfault from a Turing-only
+  build.
 
 ## Presets & offerings
 

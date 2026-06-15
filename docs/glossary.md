@@ -161,7 +161,11 @@ From [`livepeer-modules-transcode-runners`](repos/livepeer-modules-transcode-run
   hold keys.
 - **secure-orch / secure-orch-console** — the firewalled host holding the **cold key**;
   the console renders a diff of candidate-vs-published manifest and signs it. Accepts
-  **zero** inbound connections from outside the LAN.
+  **zero** inbound connections from outside the LAN. An opt-in `--agent` daemon mode
+  (plan 0042) can auto-sign within an operator-authored **sign policy** — content-identical
+  renewals always, bounded benign changes when enabled (price-delta %, worker-URL domain
+  allowlist, rate-limited), everything else held for operator review. Identity and
+  `spec_version` changes are never auto-signable.
 - **Cold key** — the orchestrator's private key, HSM-backed, on the firewalled host. It
   signs canonical manifest bytes (and, via protocol-daemon, on-chain round/reward txs) —
   **never naked transactions or tickets**, and it never leaves the host.
