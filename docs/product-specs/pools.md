@@ -14,6 +14,13 @@ This is **capacity + accounting pooling**, distinct from classic on-chain stake
 delegation. Pools are optional — a single-host orchestrator runs the broker +
 payment-daemon without any pool component.
 
+## Deploy & onboard
+
+- **Operators:** [pool deployment runbook](../guides/pool-deployment-runbook.md) — stand up
+  the public data-plane stack, wire the secure-orch, define offers, and onboard public supply.
+- **Members (suppliers):** [pool member onboarding](../guides/pool-member-onboarding.md) —
+  the "join the pool" guide for contributing a GPU and getting paid in ETH.
+
 ## The three pool components
 
 - **`pool-controller`** — owns persisted Pool state (members, backends, offers,

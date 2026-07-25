@@ -81,7 +81,7 @@ docs/
 ├── design-docs/     <- operating principles + design index (core-beliefs.md, index.md)
 ├── product-specs/   <- capability axis: one overview per capability
 ├── repos/           <- repo axis: one doc per submodule (index.md + <repo>.md)
-├── guides/          <- how-tos for maintaining this repo (git-submodules-primer.md)
+├── guides/          <- how-tos (git-submodules-primer, pool-deployment-runbook, pool-member-onboarding)
 ├── references/      <- external reference material (e.g. the harness-engineering post)
 ├── exec-plans/      <- active/, completed/, tech-debt-tracker.md
 └── generated/       <- machine-generated docs (e.g. submodule manifest)
